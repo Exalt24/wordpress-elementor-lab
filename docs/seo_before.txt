@@ -1,0 +1,17 @@
+PASS  page loads with 200   (status 200)
+PASS  no redirect chain   (final url http://localhost:8087/seller-audit/)
+PASS  title present and 30-65 characters   (46 characters: 'Amazon seller account audit - Seller Audit Lab')
+FAIL  meta description present and 70-160 characters   (0 characters)
+PASS  exactly one h1   (1 found)
+PASS  heading levels do not skip   (h1 > h2 > h3 > h3 > h3 > h2 > h2)
+PASS  every image has an alt attribute   (0 images, 0 without alt)
+PASS  canonical link present   (http://localhost:8087/seller-audit/)
+PASS  html lang attribute present   (en-US)
+PASS  viewport meta present   (width=device-width, initial-scale=1.0, viewport-fit=cover)
+FAIL  Open Graph title, description, type and url present   (has [])
+FAIL  structured data (JSON-LD) present and valid   (no JSON-LD block)
+PASS  no broken links   (1 http links checked)
+PASS  server responds in under 1.5 s   (0.10s)
+PASS  HTML under 200 KB   (37 KB)
+
+12/15 checks pass, 3 to fix
