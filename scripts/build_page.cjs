@@ -82,7 +82,7 @@ const INK = '#16243a', ACCENT = '#e8590c', SOFT = '#f4f6fa', MUTED = '#51607a';
 
   // Publish with the editor's own save command, then confirm.
   await p.evaluate(async () => { await $e.run('document/save/publish'); });
-  await p.waitForTimeout(5000);
+  await p.waitForTimeout(5000);  // fixed-wait-ok: lets the Elementor editor finish rendering before the next click; there is no DOM event for it
   console.log('saved; document status:', await p.evaluate(() => elementor.documents.getCurrent().config.status ? elementor.documents.getCurrent().config.status.value : 'n/a'));
   await b.close();
 })().catch((e) => { console.error('BUILD FAILED', e); process.exit(1); });

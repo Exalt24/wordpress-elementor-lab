@@ -13,7 +13,7 @@ const [out, id] = [process.argv[2], process.argv[3]];
   await p.click('#wp-submit');
   await p.waitForURL(/wp-admin/);
   await p.goto(`${BASE}/wp-admin/post.php?post=${id}&action=elementor`, { waitUntil: 'domcontentloaded' });
-  await p.waitForTimeout(15000);
+  await p.waitForTimeout(15000);  // fixed-wait-ok: an exploratory probe that waits for the editor to settle before dumping its state
   console.log('title:', await p.title());
   await p.screenshot({ path: out + '/editor_first.png' });
   const panel = await p.evaluate(() => {
