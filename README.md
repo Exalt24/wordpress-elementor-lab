@@ -2,7 +2,7 @@
 
 ![The Elementor editor holding the page, the published page, then the technical SEO audit failing three checks and passing all fifteen after the fix](docs/demo.gif)
 
-A landing page built **inside the real Elementor editor** on a local WordPress, then audited the way a website specialist would: a technical SEO check that found three things missing, a small must-use plugin that fixes them, and a re-run that passes. Everything runs locally in Docker. The page is a demo for an imaginary Amazon seller-audit service and says so in its footer, so there is no client, no customer and no real business behind it.
+Landing page built in the real Elementor editor on local WordPress, then audited with a 15 check SEO script. The audit found three things missing, a small must-use plugin fixes them, and a re-run passes. Everything runs locally in Docker. The page is a demo for an imaginary Amazon seller-audit service and says so in its footer, so there is no client, no customer and no real business behind it.
 
 ## What is in it
 
