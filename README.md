@@ -8,7 +8,7 @@ Landing page built in the real Elementor editor on local WordPress, then audited
 
 | Part | What it does |
 |---|---|
-| `docker-compose.yml`, `scripts/setup.sh` | WordPress 6 and MariaDB in Docker, WP-CLI install, the free Elementor plugin (4.3.3 when built) and the Hello Elementor theme |
+| `docker-compose.yml`, `scripts/setup.sh` | WordPress 6 and MariaDB in Docker, WP-CLI install, the free Elementor plugin (4.3.3 when I built it; `setup.sh` installs whatever version is current) and the Hello Elementor theme |
 | `scripts/build_page.cjs` | Opens the Elementor editor in a headless browser and builds the page with the editor's own command API (`$e.run('document/elements/create')`), then saves with the editor's publish command. Five sections: hero, three audit cards, how it works, request, footer note. Free widgets only |
 | `scripts/seo_audit.py` | A 15-check technical SEO audit: status and redirects, title and meta description length, one h1, heading order, image alt text, canonical, language, viewport, Open Graph, valid JSON-LD, broken links, response time, page weight. Standard library only |
 | `wp/mu-plugins/seo-basics.php` | The fix for what the audit found: meta description from the page excerpt, Open Graph tags and a Service JSON-LD block |
@@ -16,15 +16,15 @@ Landing page built in the real Elementor editor on local WordPress, then audited
 
 ## What the audit found
 
-The first run on the freshly built page scored **12 of 15**. It was missing the meta description, the Open Graph tags and any structured data, which is the usual state of a page built in a visual builder with no SEO plugin. After the mu-plugin and a page excerpt it scores **15 of 15**. Both outputs are kept in `docs/seo_before.txt` and `docs/seo_after.txt`.
+The first run on the freshly built page scored **12 of 15**. It was missing the meta description, the Open Graph tags and any structured data, which is what this page looked like with no SEO plugin. After the mu-plugin and a page excerpt it scores **15 of 15**. Both outputs are kept in `docs/seo_before.txt` and `docs/seo_after.txt`. The setup script mounts the mu-plugin and sets the excerpt from the start, so a fresh run gives 15 of 15; to see the 12 of 15 again, remove the `wp/mu-plugins` mount from `docker-compose.yml` and the excerpt step from `scripts/setup.sh` first.
 
-The page also fits a phone: no horizontal overflow at 390 px, cards stacked.
+The screenshot below is the page at 390 px wide, with the cards stacked.
 
 ![The page at phone width](docs/page-phone.png)
 
 ## Run it
 
-Needs Docker, Node and Python 3.
+Needs Docker, Python 3, `bash` and `curl`, and Node with Playwright installed globally (`npm install -g playwright`). The build and screenshot scripts load Playwright from the global npm folder of a Windows user (under `%APPDATA%`), so on another system change the `require` line at the top of each.
 
 ```
 bash scripts/setup.sh
