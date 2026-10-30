@@ -2,7 +2,7 @@
 
 ![The Elementor editor holding the page, the published page, then the technical SEO audit failing three checks and passing all fifteen after the fix](docs/demo.gif)
 
-Landing page built in the real Elementor editor on local WordPress, then audited with a 15 check SEO script. The audit found three things missing, a small must-use plugin fixes them, and a re-run passes. Everything runs locally in Docker. The page is a demo for an imaginary Amazon seller-audit service and says so in its footer, so there is no client, no customer and no real business behind it.
+Landing page built in the real Elementor editor on local WordPress, then audited with a 15 check SEO script. The audit found three things missing, a small must-use plugin fixes them, and a re-run passes. Everything runs locally in Docker. The page is a demo for an Amazon seller-audit service concept and says so in its footer.
 
 ## What is in it
 
@@ -33,11 +33,11 @@ python scripts/seo_audit.py http://localhost:8087/seller-audit/
 python tests/test_seo_audit.py
 ```
 
-The lab login is `admin` / `admin-local-only` at `http://localhost:8087/wp-admin`. It is a throwaway local site with no real data.
+The local login is `admin` / `admin-local-only` at `http://localhost:8087/wp-admin`. It is a local site that `scripts/setup.sh` creates.
 
-## Limits, stated plainly
+## Scope and next steps
 
-- It is a local lab, not a deployed site, and the page is a demo with no real business behind it.
-- The page was assembled through the editor's command API in a headless browser rather than by dragging widgets by hand. Elementor itself produced and saved the page data, and the editor opens and edits the result normally, but this is not a record of hand-built design work.
-- Only free Elementor widgets are used. The Pro widgets (forms, loop grids and so on) are not involved, so the request section is a mailto line and not a form.
-- The audit checks one page's technical basics. It does not measure rankings, speed under load or accessibility beyond alt text and heading order.
+- It runs as a local site in Docker, and the page is a demo for a service concept.
+- The page was assembled through the editor's command API in a headless browser. Elementor itself produced and saved the page data, and the editor opens and edits the result normally.
+- Only free Elementor widgets are used, so the request section is a mailto line. Next step: Pro widgets such as forms and loop grids.
+- The audit checks one page's technical basics, with alt text and heading order as its accessibility checks. Next steps: rankings and speed under load.
