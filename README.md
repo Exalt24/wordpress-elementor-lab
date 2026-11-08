@@ -2,7 +2,9 @@
 
 ![The Elementor editor holding the page, the published page, then the technical SEO audit failing three checks and passing all fifteen after the fix](docs/demo.gif)
 
-Landing page built in the real Elementor editor on local WordPress, then audited with a 15 check SEO script. The audit found three things missing, a small must-use plugin fixes them, and a re-run passes. Everything runs locally in Docker. The page is a demo for an Amazon seller-audit service concept and says so in its footer.
+Landing page built in the real Elementor editor on local WordPress, then audited with a 15 check SEO script.
+
+The audit found three things missing. A small must-use plugin fixes them, and a re-run passes. Everything runs locally in Docker. The page is a demo for an Amazon seller-audit service concept and says so in its footer.
 
 ## What is in it
 
@@ -16,7 +18,7 @@ Landing page built in the real Elementor editor on local WordPress, then audited
 
 ## What the audit found
 
-The first run on the freshly built page scored **12 of 15**. It was missing the meta description, the Open Graph tags and any structured data, which is what this page looked like with no SEO plugin. After the mu-plugin and a page excerpt it scores **15 of 15**. Both outputs are kept in `docs/seo_before.txt` and `docs/seo_after.txt`. The setup script mounts the mu-plugin and sets the excerpt from the start, so a fresh run gives 15 of 15; to see the 12 of 15 again, remove the `wp/mu-plugins` mount from `docker-compose.yml` and the excerpt step from `scripts/setup.sh` first.
+The first run on the freshly built page scored **12 of 15**. It was missing the meta description, the Open Graph tags and any structured data. That is what this page looked like with no SEO plugin. After the mu-plugin and a page excerpt it scores **15 of 15**. Both outputs are kept in `docs/seo_before.txt` and `docs/seo_after.txt`. The setup script mounts the mu-plugin and sets the excerpt from the start, so a fresh run gives 15 of 15; to see the 12 of 15 again, remove the `wp/mu-plugins` mount from `docker-compose.yml` and the excerpt step from `scripts/setup.sh` first.
 
 The screenshot below is the page at 390 px wide, with the cards stacked.
 
@@ -24,7 +26,7 @@ The screenshot below is the page at 390 px wide, with the cards stacked.
 
 ## Run it
 
-Needs Docker, Python 3, `bash` and `curl`, and Node with Playwright installed globally (`npm install -g playwright`). The build and screenshot scripts load Playwright from the global npm folder of a Windows user (under `%APPDATA%`), so on another system change the `require` line at the top of each.
+Needs Docker, Python 3, `bash` and `curl`, and Node with Playwright installed globally (`npm install -g playwright`). The build and screenshot scripts load Playwright from the global npm folder of a Windows user (under `%APPDATA%`). On another system, change the `require` line at the top of each.
 
 ```
 bash scripts/setup.sh
@@ -37,7 +39,7 @@ The local login is `admin` / `admin-local-only` at `http://localhost:8087/wp-adm
 
 ## Scope and next steps
 
-- It runs as a local site in Docker, and the page is a demo for a service concept.
-- The page was assembled through the editor's command API in a headless browser. Elementor itself produced and saved the page data, and the editor opens and edits the result normally.
+- It runs as a local site in Docker. The page is a demo for a service concept.
+- The page was assembled through the editor's command API in a headless browser. Elementor itself produced and saved the page data. The editor opens and edits the result normally.
 - Only free Elementor widgets are used, so the request section is a mailto line. Next step: Pro widgets such as forms and loop grids.
 - The audit checks one page's technical basics, with alt text and heading order as its accessibility checks. Next steps: rankings and speed under load.
