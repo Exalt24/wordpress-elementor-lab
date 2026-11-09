@@ -1,0 +1,96 @@
+
+== https://emergencycaretrainingguidesample.wordpress.com/  1280px
+overflow: scrollWidth 1265 / clientWidth 1265 ok
+paragraph: 18px / line height 23.4px / weight 700 / Manrope
+text colours scored: 49, failing AA: 0, lowest ratio: 6.52 (#00677a on #ffffff, "At a glance"), unknown background: 0
+tap targets: 21 measured, under 44 px high (not in running text): 2, inside running text: 1
+  SMALL 1x1  Skip to content
+  SMALL 32x26  
+
+== https://emergencycaretrainingguidesample.wordpress.com/  390px
+overflow: scrollWidth 375 / clientWidth 375 ok
+paragraph: 18px / line height 23.4px / weight 700 / Manrope
+text colours scored: 50, failing AA: 0, lowest ratio: 6.52 (#00677a on #ffffff, "At a glance"), unknown background: 0
+tap targets: 22 measured, under 44 px high (not in running text): 2, inside running text: 1
+  SMALL 1x1  Skip to content
+  SMALL 32x26  
+
+== https://emergencycaretrainingguidesample.wordpress.com/acls-recertification-online/  1280px
+overflow: scrollWidth 1265 / clientWidth 1265 ok
+paragraph: 18px / line height 23.4px / weight 700 / Manrope
+text colours scored: 41, failing AA: 0, lowest ratio: 9.66 (#8fd8e6 on #0f2540, "Course page"), unknown background: 0
+tap targets: 19 measured, under 44 px high (not in running text): 2, inside running text: 1
+  SMALL 1x1  Skip to content
+  SMALL 32x26  
+
+== https://emergencycaretrainingguidesample.wordpress.com/acls-recertification-online/  390px
+overflow: scrollWidth 375 / clientWidth 375 ok
+paragraph: 18px / line height 23.4px / weight 700 / Manrope
+text colours scored: 42, failing AA: 0, lowest ratio: 9.66 (#8fd8e6 on #0f2540, "Course page"), unknown background: 0
+tap targets: 20 measured, under 44 px high (not in running text): 2, inside running text: 1
+  SMALL 1x1  Skip to content
+  SMALL 32x26  
+
+== https://emergencycaretrainingguidesample.wordpress.com/cme-requirements/  1280px
+overflow: scrollWidth 1265 / clientWidth 1265 ok
+paragraph: 18px / line height 23.4px / weight 700 / Manrope
+text colours scored: 41, failing AA: 0, lowest ratio: 6.67 (#0b5cad on #ffffff, "questions page"), unknown background: 0
+tap targets: 20 measured, under 44 px high (not in running text): 2, inside running text: 2
+  SMALL 1x1  Skip to content
+  SMALL 32x26  
+
+== https://emergencycaretrainingguidesample.wordpress.com/cme-requirements/  390px
+overflow: scrollWidth 375 / clientWidth 375 ok
+paragraph: 18px / line height 23.4px / weight 700 / Manrope
+text colours scored: 42, failing AA: 0, lowest ratio: 6.67 (#0b5cad on #ffffff, "questions page"), unknown background: 0
+tap targets: 21 measured, under 44 px high (not in running text): 2, inside running text: 2
+  SMALL 1x1  Skip to content
+  SMALL 32x26  
+
+== https://emergencycaretrainingguidesample.wordpress.com/ultrasound-courses/  1280px
+overflow: scrollWidth 1265 / clientWidth 1265 ok
+paragraph: 18px / line height 23.4px / weight 700 / Manrope
+text colours scored: 39, failing AA: 0, lowest ratio: 9.66 (#8fd8e6 on #0f2540, "Course page"), unknown background: 0
+tap targets: 19 measured, under 44 px high (not in running text): 2, inside running text: 1
+  SMALL 1x1  Skip to content
+  SMALL 32x26  
+
+== https://emergencycaretrainingguidesample.wordpress.com/ultrasound-courses/  390px
+overflow: scrollWidth 375 / clientWidth 375 ok
+paragraph: 18px / line height 23.4px / weight 700 / Manrope
+text colours scored: 40, failing AA: 0, lowest ratio: 9.66 (#8fd8e6 on #0f2540, "Course page"), unknown background: 0
+tap targets: 20 measured, under 44 px high (not in running text): 2, inside running text: 1
+  SMALL 1x1  Skip to content
+  SMALL 32x26  
+
+== https://emergencycaretrainingguidesample.wordpress.com/questions/  1280px
+overflow: scrollWidth 1265 / clientWidth 1265 ok
+paragraph: 18px / line height 23.4px / weight 700 / Manrope
+text colours scored: 51, failing AA: 0, lowest ratio: 6.52 (#00677a on #ffffff, "Jump to a group"), unknown background: 0
+tap targets: 44 measured, under 44 px high (not in running text): 2, inside running text: 11
+  SMALL 1x1  Skip to content
+  SMALL 32x26  
+
+== https://emergencycaretrainingguidesample.wordpress.com/questions/  390px
+overflow: scrollWidth 375 / clientWidth 375 ok
+paragraph: 18px / line height 23.4px / weight 700 / Manrope
+text colours scored: 52, failing AA: 0, lowest ratio: 6.52 (#00677a on #ffffff, "Jump to a group"), unknown background: 0
+tap targets: 45 measured, under 44 px high (not in running text): 2, inside running text: 1
+  SMALL 1x1  Skip to content
+  SMALL 32x26  
+
+== https://emergencycaretrainingguidesample.wordpress.com/about-this-sample/  1280px
+overflow: scrollWidth 1265 / clientWidth 1265 ok
+paragraph: 18px / line height 23.4px / weight 700 / Manrope
+text colours scored: 42, failing AA: 0, lowest ratio: 9.66 (#8fd8e6 on #0f2540, "About"), unknown background: 0
+tap targets: 20 measured, under 44 px high (not in running text): 2, inside running text: 1
+  SMALL 1x1  Skip to content
+  SMALL 32x26  
+
+== https://emergencycaretrainingguidesample.wordpress.com/about-this-sample/  390px
+overflow: scrollWidth 375 / clientWidth 375 ok
+paragraph: 18px / line height 23.4px / weight 700 / Manrope
+text colours scored: 43, failing AA: 0, lowest ratio: 9.66 (#8fd8e6 on #0f2540, "About"), unknown background: 0
+tap targets: 21 measured, under 44 px high (not in running text): 2, inside running text: 1
+  SMALL 1x1  Skip to content
+  SMALL 32x26  
