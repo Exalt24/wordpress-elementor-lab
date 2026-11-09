@@ -20,6 +20,7 @@ The audit found three things missing. A small must-use plugin fixes them, and a 
 | `scripts/keyword_research.py` | Keyword and topic research from Google, Bing and DuckDuckGo autocomplete (no key): expands seeds with question and modifier words, scores by source agreement and position, groups the keywords into pages and writes a content map with internal links and title and meta drafts |
 | `scripts/ai_visibility.py` | Asks a model a list of questions several times and counts how often named organisations appear in the answers, with a 95 percent Wilson interval. Runs on a local Ollama model or any OpenAI compatible endpoint |
 | `tests/test_keyword_research.py`, `tests/test_ai_visibility.py`, `tests/mutation_check.py` | 37 and 19 offline checks, and a script that breaks 24 guards one at a time and needs a test to go red each time. CI runs all of them |
+| `docs/launched-site.md` | A public six page WordPress.com site on the free plan, built in the block editor from the keyword research content map: https://emergencycaretrainingguidesample.wordpress.com/ . Audited with the same 15 checks, with the screenshots, the audit outputs and an edit and revert in the editor saved beside it |
 
 ## What the audit found
 
@@ -34,6 +35,10 @@ The screenshot below is the page at 390 px wide, with the cards stacked.
 Three seeds about emergency medicine training gave 166 distinct keywords from 108 autocomplete responses, grouped into 14 pages around a pillar page, in [docs/keyword-research-sample.md](docs/keyword-research-sample.md).
 
 The AI check asked a local qwen3.5:9b model 12 of those questions three times each (36 answers, 0 errors) and counted six public names. The American Heart Association appeared in 24 of 36 answers (67 percent, interval 50 to 80), ACEP and Medscape in 2 each, and EM:RAP, Hippo Education and UpToDate in none. It named the American Heart Association in all three answers to 8 of the 9 ACLS questions and never for the two CME questions, where Medscape appeared once in each. The table per question is in [docs/ai-visibility-sample.md](docs/ai-visibility-sample.md).
+
+## What the launched site shows
+
+The six page site is live on a free WordPress.com subdomain and was built from the keyword research content map: a front page, three topic pages, a questions page and an about page, with a menu and a footer. Its pages score 12 to 13 of 15 on the audit. The misses are no JSON-LD, which the free plan has no plugin for, one 403 on WordPress.com's own login link, and two titles over the length limit because the site title is added to each page title. The causes and the free plan limits are written up in [docs/launched-site.md](docs/launched-site.md), with screenshots at 1280 and 390 pixels wide and a page edited and reverted in the block editor.
 
 ## Run it
 
