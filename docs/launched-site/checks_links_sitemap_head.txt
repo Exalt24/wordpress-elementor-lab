@@ -1,0 +1,60 @@
+Menu links, sitemap and robots, checked 2026-11-09T20:21Z (UTC). Note: the default Hello World post was deleted a few minutes earlier; the sitemap still listed its URL from a cache, and that URL now answers 404.
+/                                200
+/acls-recertification-online/    200
+/cme-requirements/               200
+/ultrasound-courses/             200
+/questions/                      200
+/about-this-sample/              200
+/sitemap.xml                     200
+/robots.txt                      200
+
+--- sitemap.xml, loc entries
+<loc>https://emergencycaretrainingguidesample.wordpress.com/about-this-sample/</loc>
+<loc>https://emergencycaretrainingguidesample.wordpress.com/questions/</loc>
+<loc>https://emergencycaretrainingguidesample.wordpress.com/ultrasound-courses/</loc>
+<loc>https://emergencycaretrainingguidesample.wordpress.com/cme-requirements/</loc>
+<loc>https://emergencycaretrainingguidesample.wordpress.com/acls-recertification-online/</loc>
+<loc>https://emergencycaretrainingguidesample.wordpress.com/</loc>
+<loc>https://emergencycaretrainingguidesample.wordpress.com/2026/11/09/hello-world/</loc>
+<loc>https://emergencycaretrainingguidesample.wordpress.com</loc>
+
+--- robots.txt (comments removed)
+Sitemap: https://emergencycaretrainingguidesample.wordpress.com/sitemap.xml
+Sitemap: https://emergencycaretrainingguidesample.wordpress.com/news-sitemap.xml
+User-agent: *
+Disallow: /wp-admin/
+Allow: /wp-admin/admin-ajax.php
+Disallow: /wp-login.php
+Disallow: /wp-signup.php
+Disallow: /press-this.php
+Disallow: /remote-login.php
+Disallow: /activate/
+Disallow: /cgi-bin/
+Disallow: /mshots/v1/
+Disallow: /next/
+Disallow: /public.api/
+
+--- head tags of /
+<html lang="en">
+<title>Emergency Care Guide (sample site) &#8211; A portfolio sample site</title>
+<link rel="canonical" href="https://emergencycaretrainingguidesample.wordpress.com/" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Emergency Care Guide (sample site)" />
+<meta property="og:description" content="A portfolio sample site" />
+<meta property="og:url" content="https://emergencycaretrainingguidesample.wordpress.com/" />
+<meta property="og:site_name" content="Emergency Care Guide (sample site)" />
+<meta name="twitter:card" content="summary" />
+<meta name="description" content="Sample guide to emergency medicine CME with placeholder text. It links to course and topic pages. An invented organisation, and no medical advice." />
+--- head tags of /acls-recertification-online/
+<html lang="en">
+<title>ACLS Recertification Online &#8211; Emergency Care Guide (sample site)</title>
+<link rel="canonical" href="https://emergencycaretrainingguidesample.wordpress.com/acls-recertification-online/" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="ACLS Recertification Online" />
+<meta property="og:url" content="https://emergencycaretrainingguidesample.wordpress.com/acls-recertification-online/" />
+<meta property="og:description" content="Placeholder course page about ACLS recertification online, part of a sample site built for a portfolio. It gives no medical advice." />
+<meta property="og:site_name" content="Emergency Care Guide (sample site)" />
+<meta name="twitter:card" content="summary" />
+<meta name="description" content="Placeholder course page about ACLS recertification online, part of a sample site built for a portfolio. It gives no medical advice." />
+
+--- JSON-LD blocks on /: 0

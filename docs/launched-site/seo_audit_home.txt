@@ -1,0 +1,17 @@
+PASS  page loads with 200   (status 200)
+PASS  no redirect chain   (final url https://emergencycaretrainingguidesample.wordpress.com/)
+PASS  title present and 30-65 characters   (60 characters: 'Emergency Care Guide (sample site) – A portfolio sample site')
+PASS  meta description present and 70-160 characters   (146 characters)
+PASS  exactly one h1   (1 found)
+PASS  heading levels do not skip   (h1 > h2 > h3 > h3 > h3 > h2 > h2)
+PASS  every image has an alt attribute   (2 images, 0 without alt)
+PASS  canonical link present   (https://emergencycaretrainingguidesample.wordpress.com/)
+PASS  html lang attribute present   (en)
+PASS  viewport meta present   (width=device-width, initial-scale=1)
+PASS  Open Graph title, description, type and url present   (has ['og:title', 'og:description', 'og:type', 'og:url'])
+FAIL  structured data (JSON-LD) present and valid   (no JSON-LD block)
+FAIL  no broken links   (13 http links checked, broken: [('https://wordpress.com/log-in?redirect_to=https%3A%2F%2Femergencycaretrainingguidesample.wordpress.com%2F&signup_flow=account', 403)])
+PASS  server responds in under 1.5 s   (0.22s)
+PASS  HTML under 200 KB   (102 KB)
+
+13/15 checks pass, 2 to fix

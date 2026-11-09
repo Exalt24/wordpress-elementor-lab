@@ -1,0 +1,12 @@
+Editor proof, page ACLS Recertification Online, first h2 of the page.
+Done in the block editor UI: click the heading, select its text, type, press Save (the button reads Save in this editor, the toast says "Page updated").
+The public page was then fetched with curl (no login, cache buster in the query string) and the h2 lines were read.
+
+After the edit (screenshots 05 and 06):
+<h2 class="wp-block-heading">What this page is for (edited in the block editor)</h2>
+<h2 class="wp-block-heading">What a real page would hold</h2>
+<h2 class="wp-block-heading">Common wordings for the same topic</h2>
+
+After the revert, done the same way (screenshot 07):
+<h2 class="wp-block-heading">What this page is for</h2>
+<h2 class="wp-block-heading">What a real page would hold</h2>
