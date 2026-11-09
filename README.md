@@ -4,6 +4,8 @@
 
 Landing page built in the real Elementor editor on local WordPress, then audited with a 15 check SEO script.
 
+[![tests](https://github.com/Exalt24/wordpress-elementor-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/Exalt24/wordpress-elementor-lab/actions/workflows/ci.yml)
+
 The audit found three things missing. A small must-use plugin fixes them, and a re-run passes. Everything runs locally in Docker. The page is a demo for an Amazon seller-audit service concept and says so in its footer.
 
 ## What is in it
