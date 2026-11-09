@@ -1,0 +1,21 @@
+name: tests
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+jobs:
+  offline-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: SEO audit tests
+        run: python tests/test_seo_audit.py
+      - name: Keyword research tests
+        run: python tests/test_keyword_research.py
+      - name: AI visibility tests
+        run: python tests/test_ai_visibility.py
+      - name: Deliberate breakage check
+        run: python tests/mutation_check.py

@@ -15,6 +15,9 @@ The audit found three things missing. A small must-use plugin fixes them, and a 
 | `scripts/seo_audit.py` | A 15-check technical SEO audit: status and redirects, title and meta description length, one h1, heading order, image alt text, canonical, language, viewport, Open Graph, valid JSON-LD, broken links, response time, page weight. Standard library only |
 | `wp/mu-plugins/seo-basics.php` | The fix for what the audit found: meta description from the page excerpt, Open Graph tags and a Service JSON-LD block |
 | `tests/test_seo_audit.py` | Nine offline tests: a clean page passes everything, and eight pages with exactly one defect each fail exactly that check |
+| `scripts/keyword_research.py` | Keyword and topic research from Google, Bing and DuckDuckGo autocomplete (no key): expands seeds with question and modifier words, scores by source agreement and position, groups the keywords into pages and writes a content map with internal links and title and meta drafts |
+| `scripts/ai_visibility.py` | Asks a model a list of questions several times and counts how often named organisations appear in the answers, with a 95 percent Wilson interval. Runs on a local Ollama model or any OpenAI compatible endpoint |
+| `tests/test_keyword_research.py`, `tests/test_ai_visibility.py`, `tests/mutation_check.py` | 37 and 19 offline checks, and a script that breaks 24 guards one at a time and needs a test to go red each time. CI runs all of them |
 
 ## What the audit found
 
@@ -23,6 +26,12 @@ The first run on the freshly built page scored **12 of 15**. It was missing the 
 The screenshot below is the page at 390 px wide, with the cards stacked.
 
 ![The page at phone width](docs/page-phone.png)
+
+## What the keyword and AI scripts found
+
+Three seeds about emergency medicine training gave 166 distinct keywords from 108 autocomplete responses, grouped into 14 pages around a pillar page, in [docs/keyword-research-sample.md](docs/keyword-research-sample.md).
+
+The AI check asked a local qwen3.5:9b model 12 of those questions three times each (36 answers, 0 errors) and counted six public names. The American Heart Association appeared in 24 of 36 answers (67 percent, interval 50 to 80), ACEP and Medscape in 2 each, and EM:RAP, Hippo Education and UpToDate in none. It named the American Heart Association in all three answers to 8 of the 9 ACLS questions and never for the two CME questions, where Medscape appeared once in each. The table per question is in [docs/ai-visibility-sample.md](docs/ai-visibility-sample.md).
 
 ## Run it
 
@@ -35,6 +44,14 @@ python scripts/seo_audit.py http://localhost:8087/seller-audit/
 python tests/test_seo_audit.py
 ```
 
+The keyword and AI answer scripts need only Python 3, and the AI one needs a local Ollama model or an OpenAI compatible endpoint with a key. Details and limits are in [docs/seo-keyword-and-ai-visibility.md](docs/seo-keyword-and-ai-visibility.md).
+
+```
+python scripts/keyword_research.py "emergency medicine cme" "acls recertification online" "ultrasound course for emergency physicians" --replay tests/fixtures/suggestions.json
+python scripts/ai_visibility.py --questions tests/fixtures/questions.txt --entities "ACEP,Medscape" --model qwen3.5:9b
+python tests/test_keyword_research.py && python tests/test_ai_visibility.py && python tests/mutation_check.py
+```
+
 The local login is `admin` / `admin-local-only` at `http://localhost:8087/wp-admin`. It is a local site that `scripts/setup.sh` creates.
 
 ## Scope and next steps
@@ -42,4 +59,5 @@ The local login is `admin` / `admin-local-only` at `http://localhost:8087/wp-adm
 - It runs as a local site in Docker. The page is a demo for a service concept.
 - The page was assembled through the editor's command API in a headless browser. Elementor itself produced and saved the page data. The editor opens and edits the result normally.
 - Only free Elementor widgets are used, so the request section is a mailto line. Next step: Pro widgets such as forms and loop grids.
+- The keyword suggestions are not search volumes, because no keyless source gives volumes. The AI answer check asks a model: the sample run used a local model, which does not browse and is not ChatGPT or Perplexity. Google AI Overviews have no API and are not checked.
 - The audit checks one page's technical basics, with alt text and heading order as its accessibility checks. Next steps: rankings and speed under load.
