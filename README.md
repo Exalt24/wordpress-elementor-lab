@@ -21,6 +21,7 @@ The audit found three things missing. A small must-use plugin fixes them, and a 
 | `scripts/ai_visibility.py` | Asks a model a list of questions several times and counts how often named organisations appear in the answers, with a 95 percent Wilson interval. Runs on a local Ollama model or any OpenAI compatible endpoint |
 | `tests/test_keyword_research.py`, `tests/test_ai_visibility.py`, `tests/mutation_check.py` | 37 and 19 offline checks, and a script that breaks 24 guards one at a time and needs a test to go red each time. CI runs all of them |
 | `docs/launched-site.md` | A public six page WordPress.com site on the free plan, built in the block editor from the keyword research content map: https://emergencycaretrainingguidesample.wordpress.com/ . Audited with the same 15 checks, with the screenshots, the audit outputs and an edit and revert in the editor saved beside it, then a design pass against three medical education sites with before and after screenshots, and `scripts/contrast_check.cjs` for computed contrast, tap size and overflow |
+| `docs/qa-defect-report.md` | A QA defect report from testing the launched site and a second sample site at 1280 and 390 pixels wide: 9 reproduced defects with steps, expected and actual results, cropped screenshots and a suggested fix each, then the list of what was checked and found clean. Screenshots are in `docs/qa-defect-report/` |
 
 ## What the audit found
 
