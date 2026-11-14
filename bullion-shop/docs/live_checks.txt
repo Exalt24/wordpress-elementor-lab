@@ -1,0 +1,16 @@
+PASS  six shop page loads inside ten seconds cost the feed at most one call   [1 calls]
+PASS  the home page carries FAQPage and Organization markup, and the questions are printed on the page
+PASS  a fresh product page shows a live price marked fresh
+PASS  a dead feed: the page still shows the last good price, marked stale   [stale]
+PASS  a dead feed: the page still answers quickly (the feed timeout is 2 seconds)   [0.3 s]
+PASS  past the limit: the REST route reports unavailable with no prices   [{'state': 'unavailable', 'prices': None, 'as_of': None, 'currency': 'GBP'}]
+PASS  past the limit: the product page says the price is unavailable
+PASS  past the limit: there is no add to cart button
+PASS  past the limit: the JSON-LD has no Offer
+PASS  past the limit: the Merchant Center feed leaves the product out
+PASS  a recovered feed is fresh again, with the button and the Offer back
+PASS  a feed that triples the gold price never reaches a customer: the last good price stays, marked stale   [stale, gold 1638.77, 0.3 s]
+PASS  a feed that answers with a maintenance page never reaches a customer: the last good price stays, marked stale   [stale, gold 1636.1, 0.3 s]
+PASS  a feed that answers after five seconds never reaches a customer: the last good price stays, marked stale   [stale, gold 1634.31, 2.1 s]
+
+14 of 14 checks pass

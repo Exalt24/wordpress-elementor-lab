@@ -1,0 +1,5 @@
+run               score              FCP s              LCP s             TBT ms                CLS      Speed Index s server response ms
+1                    89                2.3                3.2                  0              0.000                4.0               1969
+2                    88                2.3                3.3                  0              0.000                4.0               1932
+3                    89                2.3                3.2                  0              0.000                4.0               1984
+med                  89                2.3                3.2                  0              0.000                4.0               1969

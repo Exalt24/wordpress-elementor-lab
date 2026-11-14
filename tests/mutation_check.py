@@ -13,10 +13,13 @@ import sys
 import tempfile
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-TESTS = ["tests/test_keyword_research.py", "tests/test_ai_visibility.py", "tests/test_seo_audit.py"]
-PHP_TEST = "opencart/tests/test_markup.php"
+TESTS = ["tests/test_keyword_research.py", "tests/test_ai_visibility.py", "tests/test_seo_audit.py", "bullion-shop/tests/test_scripts.py"]
+PHP_TESTS = ["opencart/tests/test_markup.php", "bullion-shop/tests/test_logic.php"]
 KR, AV, SA = "scripts/keyword_research.py", "scripts/ai_visibility.py", "scripts/seo_audit.py"
 MK = "opencart/extension/seolab/system/library/markup.php"
+BL = "bullion-shop/mu-plugins/bullion-lab/lib/"
+SPOT, PRICING, SCHEMA, FEED, LIMITER, HEADERS, RL, AS, FW = (BL + n + ".php" for n in ("spot", "pricing", "schema", "feed", "limiter", "headers", "ratelimit", "assets", "firewall"))
+HC, SC = "bullion-shop/scripts/hardening_check.py", "bullion-shop/scripts/schema_check.py"
 
 MUTANTS = [
     (KR, "relevance guard removed", "if not seed_words & set(content_words(kw)):", "if False:"),
@@ -58,14 +61,54 @@ MUTANTS = [
     (MK, "markup injected into html with no head", "$pos === false || $markup === ''", "$markup === ''"),
     (MK, "sku and image invented when missing", "if (!empty($p[$source])) {", "if (true) {"),
     (MK, "last crumb always linked", "if ($crumb[1] !== '') {", "if (true) {"),
+    (SPOT, "a stale price is shown for ever", "if ($last !== null && $now - $last['fetched_at'] <= $staleMax) {", "if ($last !== null) {"),
+    (SPOT, "a wild reading is accepted", "if ($parsed !== null && self::sane($parsed, $last)) {", "if ($parsed !== null) {"),
+    (SPOT, "the cache lifetime is ignored", "if ($last !== null && $now - $last['fetched_at'] < $ttl) {", "if (false) {"),
+    (SPOT, "the fetch lock is ignored", "if ($canFetch) {", "if (true) {"),
+    (SPOT, "a zero price is accepted", "|| $v <= 0) {", "|| $v < 0) {"),
+    (SPOT, "a string price is accepted", "if (!(is_int($v) || is_float($v)) || !is_finite", "if (!is_finite"),
+    (SPOT, "a feed that throws is not caught", "catch (\\Throwable $e)", "catch (\\InvalidArgumentException $e)"),
+    (SPOT, "the jump limit is far too wide", "float $maxJump = 0.15", "float $maxJump = 5.0"),
+    (PRICING, "the premium is ignored", "(1 + $premiumPct / 100)", "1"),
+    (PRICING, "buy back can go negative", "return max(0, (int) round(", "return ((int) round("),
+    (SCHEMA, "the price claims to last the year", "$p['as_of'] + $ttl", "$p['as_of'] + 31536000"),
+    (SCHEMA, "an Offer is written with no price", "if ($p['pence'] !== null && $p['as_of'] !== null) {", "if (true) {"),
+    (SCHEMA, "a product name can close the script", " | JSON_HEX_TAG | JSON_HEX_AMP", ""),
+    (SCHEMA, "stock is ignored", "$p['in_stock'] ? 'https://schema.org/InStock'", "true ? 'https://schema.org/InStock'"),
+    (FEED, "an item with no price is listed", "if ($i['pence'] === null) {", "if (false) {"),
+    (FEED, "feed text is not escaped", "htmlspecialchars($s, ENT_XML1 | ENT_QUOTES, 'UTF-8')", "$s"),
+    (FEED, "the price loses its decimals", "sprintf('%.2f', $i['pence'] / 100)", "($i['pence'] / 100)"),
+    (LIMITER, "the fifth failure does not lock", "if (count($fails) >= self::MAX_FAILS) {", "if (count($fails) > self::MAX_FAILS) {"),
+    (LIMITER, "old failures are never forgotten", "if ($now - $t < self::WINDOW) {", "if (true) {"),
+    (LIMITER, "a forged forwarding header picks the key", "(string) ($server['REMOTE_ADDR'] ?? 'unknown')", "(string) ($server['HTTP_X_FORWARDED_FOR'] ?? $server['REMOTE_ADDR'] ?? 'unknown')"),
+    (LIMITER, "the lock holds one second too long", "($rec['locked_until'] ?? 0) > $now;", "($rec['locked_until'] ?? 0) >= $now;"),
+    (HEADERS, "HSTS is sent on plain http", "if ($https) {", "if (true) {"),
+    (HEADERS, "nosniff is not sent", "'X-Content-Type-Options' => 'nosniff'", "'X-Content-Type-Options' => ''"),
+    (SCHEMA, "a question with no answer goes into the markup", "if ($q !== '' && $a !== '') {", "if (true) {"),
+    (SCHEMA, "an empty FAQ still writes markup", "return $items === [] ? null :", "return false ? null :"),
+    (AS, "a stylesheet is left blocking", "return str_replace(\"media='all'\", \"media='print' onload=\\\"this.media='all'\\\"\", $tag) . '<noscript>' . $tag . '</noscript>';", "return $tag;"),
+    (AS, "the noscript copy is dropped", " . '<noscript>' . $tag . '</noscript>';", ";"),
+    (AS, "the main stylesheet would be dropped", "'storefront-fonts', 'storefront-gutenberg-blocks',", "'storefront-fonts', 'storefront-gutenberg-blocks', 'storefront-icons',"),
+    (FW, "an attack tool user agent passes", "if (preg_match(self::AGENT_PATTERN, strtolower($userAgent))) {", "if (false) {"),
+    (FW, "the path is not lower cased", "$p = strtolower(rawurldecode($path));", "$p = rawurldecode($path);"),
+    (FW, "the path is not percent decoded", "$p = strtolower(rawurldecode($path));", "$p = strtolower($path);"),
+    (FW, "a secret file name is not matched", "'#(^|/)\\.(env|git|svn|hg|htpasswd|ds_store)(/|$)#',", "'#(^|/)\\.(git|svn|hg|htpasswd|ds_store)(/|$)#',"),
+    (HC, "a site that refuses no scanner probe passes", 'add("scanner probes refused", s1 == 403 and s2 == 403 and s3 == 403,', 'add("scanner probes refused", True,'),
+    (RL, "the 30th request in a minute is refused", "return [$rec['count'] <= $limit, $rec];", "return [$rec['count'] < $limit, $rec];"),
+    (RL, "the window never rolls over", "if ($rec === null || $now - $rec['start'] >= self::WINDOW) {", "if ($rec === null) {"),
+    (RL, "every page is limited as search", "if (isset($query['s'])) {", "if (true) {"),
+    (HC, "a site that never rate limits passes", 'add("site search is rate limited", 429 in codes,', 'add("site search is rate limited", True,'),
+    (HC, "author enumeration is never reported", '"/author/" not in final and', "True and"),
+    (HC, "a login that succeeds after the failures passes", "not any(wrong) and not ok_login and", "not any(wrong) and"),
+    (SC, "a price valid for any length of time passes", "MAX_VALID_SECONDS = 3600", "MAX_VALID_SECONDS = 10 ** 10"),
 ]
 
 
 def php_command(folder):
-    """The command that runs the PHP test: a local php when there is one, else the official php image with the folder mounted."""
+    """The command that runs the PHP tests: a local php when there is one, else the official php image with the folder mounted."""
     if shutil.which("php"):
-        return ["php", os.path.join(folder, PHP_TEST)]
-    return ["docker", "run", "--rm", "-v", folder + ":/lab", "-w", "/lab", "php:8.2-cli", "php", PHP_TEST]
+        return ["sh", "-c", " && ".join("php " + t for t in PHP_TESTS)]
+    return ["docker", "run", "--rm", "-v", folder + ":/lab", "-w", "/lab", "php:8.2-cli", "sh", "-c", " && ".join("php " + t for t in PHP_TESTS)]
 
 
 def run_tests(folder):
@@ -81,12 +124,16 @@ def main():
     base = tempfile.mkdtemp(prefix="mutcheck_")
     try:
         copy = os.path.join(base, "clean")
-        shutil.copytree(ROOT, copy, ignore=shutil.ignore_patterns("__pycache__", ".git", "docs", "wp", "demo"))
+        shutil.copytree(ROOT, copy, ignore=shutil.ignore_patterns("__pycache__", ".git", "docs", "wp", "demo", "build"))
         if not run_tests(copy):
             print("FAIL  the unbroken copy does not pass its own tests")
             return 1
-        caught = 0
+        caught = ran = 0
+        lo, hi = int(os.environ.get("MUT_FROM", 0)), int(os.environ.get("MUT_TO", len(MUTANTS)))   # a slice of the list, for a run that must be split
         for i, (rel, name, old, new) in enumerate(MUTANTS):
+            if not lo <= i < hi:
+                continue
+            ran += 1
             folder = os.path.join(base, "m%d" % i)
             shutil.copytree(copy, folder)
             path = os.path.join(folder, rel)
@@ -97,9 +144,10 @@ def main():
             open(path, "w", encoding="utf-8", newline="").write(src.replace(old, new))
             red = not run_tests(folder)
             caught += red
+            shutil.rmtree(folder, ignore_errors=True)
             print(("CAUGHT  " if red else "SURVIVED  ") + name)
-        print("\n%d of %d breaks caught" % (caught, len(MUTANTS)))
-        return 0 if caught == len(MUTANTS) else 1
+        print("\n%d of %d breaks caught" % (caught, ran))
+        return 0 if caught == ran else 1
     finally:
         shutil.rmtree(base, ignore_errors=True)
 

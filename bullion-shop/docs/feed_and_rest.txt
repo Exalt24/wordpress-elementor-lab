@@ -1,0 +1,7 @@
+### Merchant Center feed, first item
+<item><g:id>SILVER-COIN-1OZ</g:id><title>Ledger Mint 1 oz Silver Coin</title><description>1 troy oz of silver, priced live from the spot price. Invented lab product, not for sale.</description><link>http://localhost:8089/product/silver-coin-1oz/</link><g:image_link>http://localhost:8089/wp-content/uploads/2026/11/silver-coin-1oz.png</g:image_link><g:availability>in stock</g:availability><g:price>25.15 GBP</g:price><g:condition>new</g:condition><g:brand>Ledger Mint</g:brand><g:identifier_exists>no</g:identifier_exists></item>
+
+### REST route and its cache header
+HTTP/1.1 200 OK
+Cache-Control: public, max-age=10
+{"state":"fresh","prices":{"gold":1649.62,"silver":21.31},"as_of":1794694966,"currency":"GBP"}

@@ -10,6 +10,8 @@ The audit found three things missing. A small must-use plugin fixes them, and a 
 
 The same audit then ran on a stock OpenCart 4 store (PHP) with a small sample catalogue. A fresh OpenCart scores 8, 10 and 10 of 15 on its home, category and product pages, and an extension plus a few settings take all three to 15 of 15. See [What the OpenCart store shows](#what-the-opencart-store-shows).
 
+A WooCommerce shop in [`bullion-shop/`](bullion-shop/docs/bullion-shop.md) prices twelve invented gold and silver products live from a stand-in metals feed. One saved price reading instead of a feed call for every product cut the shop page's server response from 1969 ms to 233 ms, and trimming what Lighthouse named as render blocking took the mobile score from 91 to 98 and the Largest Contentful Paint from 3.2 s to 2.3 s. It also has a spot price shortcode, Product, Organization and FAQ markup, a Merchant Center feed and hardening that took an outside probe from 1 of 13 checks to 13 of 13.
+
 ## What is in it
 
 | Part | What it does |
@@ -24,6 +26,7 @@ The same audit then ran on a stock OpenCart 4 store (PHP) with a small sample ca
 | `tests/test_keyword_research.py`, `tests/test_ai_visibility.py`, `tests/mutation_check.py` | 37 and 19 offline checks, and a script that breaks 39 guards one at a time (Python and PHP) and needs a test to go red each time. CI runs all of them |
 | `opencart/` | A stock OpenCart 4.1 store in Docker (PHP 8.2, MariaDB) with a six product sample catalogue, and the fix as an OpenCart extension, `opencart/extension/seolab/`, wired in with six events so no core file is edited: canonical links, meta descriptions, Open Graph tags, JSON-LD (Organization, WebSite, BreadcrumbList, Product with stock and price), a home page `h1`, heading order, a title length rule and an XML sitemap. `opencart/robots.txt` and an `.htaccess` rewrite sit beside it. `opencart/scripts/run_lab.sh` builds the store, audits it, applies the fix, audits again and writes `docs/opencart_before.txt`, `docs/opencart_after.txt` and `docs/opencart_checks.txt` |
 | `opencart/tests/test_markup.php` | 29 offline PHP checks on the markup builders, each on a good input and a hostile or empty one (a product name that tries to close the JSON-LD script tag, a sitemap address with an ampersand, an out of stock product). CI runs them on Linux with the runner's PHP |
+| `bullion-shop/` | A local WooCommerce shop in Docker with twelve invented gold and silver products priced live from a stand-in metals feed (`scripts/spot_server.py`, no vendor key): a must-use plugin with a cached price reading, a spot price shortcode and REST route, live Product and Offer markup, a Merchant Center feed, lean assets and hardening, with probes, Lighthouse and tests. Every number: [bullion-shop/docs/bullion-shop.md](bullion-shop/docs/bullion-shop.md) |
 | `docs/launched-site.md` | A public six page WordPress.com site on the free plan, built in the block editor from the keyword research content map: https://emergencycaretrainingguidesample.wordpress.com/ . Audited with the same 15 checks, with the screenshots, the audit outputs and an edit and revert in the editor saved beside it, then a design pass against three medical education sites with before and after screenshots, and `scripts/contrast_check.cjs` for computed contrast, tap size and overflow |
 | `docs/qa-defect-report.md` | A QA defect report from testing the launched site and a second sample site at 1280 and 390 pixels wide: 9 reproduced defects with steps, expected and actual results, cropped screenshots and a suggested fix each, then the list of what was checked and found clean. Screenshots are in `docs/qa-defect-report/` |
 
@@ -45,14 +48,30 @@ OpenCart is a PHP storefront, so the fixes live in PHP and Twig, not in a plugin
 | Category | 10 of 15: a 9 character title, no meta description, heading levels jump from `h1` to `h4`, no Open Graph, no JSON-LD | 15 of 15 |
 | Product | 10 of 15: a 17 character title, no meta description, headings jump from `h2` to `h5`, no Open Graph, no JSON-LD | 15 of 15 |
 
-What changed, and where:
+What changed, and where (settings and data, crawl and index, structured data, headings and titles), and the bug the crawl found in the audit's own link check: [docs/opencart-fix.md](docs/opencart-fix.md).
 
-- **Settings and data** (`opencart/scripts/fix_settings.sql`): a store name, a home title and description, SEO URLs switched on (`/en-gb/product/summit-30-daypack` instead of `index.php?route=product/product&product_id=101`), and the home page modules pointed at products that exist.
-- **Crawl and index**: `sitemap.xml` lists the home page, both categories and all six products, with the day each product changed. `robots.txt` keeps crawlers out of checkout, account, search and sorted listing addresses, and those pages also carry `noindex,follow`. The old `index.php?route=` address of a product still answers, and its canonical points at the one clean address, with sort and limit parameters dropped.
-- **Structured data**: the Product node carries price, currency, SKU, image and stock, so the sold out Trail 20 Daypack reads `OutOfStock`. A missing image or SKU is left out, never invented. The JSON-LD is encoded so a product name containing `</script>` cannot end the block early, and a test proves it.
-- **Headings and titles**: product card titles and footer column titles keep their look but move to `h2`, so the outline stops skipping levels. A short title gets the store name added, and a title over 65 characters is cut on a word.
+## What the bullion shop shows
 
-The audit also had a bug of its own. On OpenCart's category page it reported a link as broken that a browser follows fine, because OpenCart sets `<base href>` and the audit resolved relative links against the page address instead. It now follows the base, with a test and a mutant for it.
+A shop that prices gold and silver from the spot price needs a current price on every page view, and the price must never be wrong. `bullion-shop/` builds that on WooCommerce against a stand-in feed with invented prices and measures three states of the same shop.
+
+| Shop page, same laptop, same feed | Before | Saved price | Saved price, lean assets |
+|---|---|---|---|
+| Feed calls in 6 page loads | 72 | 0 | 0 |
+| Time to first byte (median of 6) | 1.92 s | 0.07 s | 0.06 s |
+| Lighthouse mobile server response (median of 3) | 1969 ms | 233 ms | 245 ms |
+| Lighthouse mobile performance score (3 runs) | 89, 88, 89 | 91, 91, 91 | 99, 98, 98 |
+| Largest Contentful Paint (median of 3) | 3.2 s | 3.2 s | 2.3 s |
+| First Contentful Paint and Speed Index | 2.3 s and 4.0 s | 2.3 s and 2.3 s | 1.2 s and 1.2 s |
+| Outside hardening probes passed | 1 of 13 | not run | 13 of 13 |
+
+The saved price keeps one reading for 10 seconds, lets one request at a time refresh it, throws away a reading that jumped more than 15 percent, shows the last good price marked stale for up to 40 seconds and then no price at all. That removes the server wait but not the paint time, which the theme's files set. The lean assets do that: Google Fonts, block and brand styles the page does not use, the jQuery Migrate shim and a 15 KB icon font stylesheet that is 97 percent unused are dropped or loaded without blocking, and jQuery moves to the footer. These are Lighthouse's simulated mobile figures on a lab page, not field data; a check afterwards found no console errors on three pages and a working cart.
+
+* **Bad days** (14 of 14 live checks): a dead feed leaves the last good price on the page marked stale; past the limit there is no price, no add to cart button, no Offer markup and no Merchant Center line; a feed that triples the gold price or answers with a maintenance page never reaches a customer.
+* **Markup**: WooCommerce's Offer says a price is valid until the end of the year, which is wrong for a price that moves every few seconds, so the plugin sets `priceValidUntil` to when the saved reading expires and checks the offered price against the price printed on the page.
+* **Hardening**: security headers, XML-RPC refused, scanner probes for secrets refused, the users list closed, search and REST limited per address, the dashboard code editor off, and a login limit that refuses the correct password after five wrong ones. A network firewall and backups are server jobs and are not done here.
+* **Tests**: 85 PHP checks on the rules, 32 Python checks and all 79 guards in `tests/mutation_check.py`.
+
+Run it with `bash bullion-shop/scripts/run_lab.sh` (Docker, Python 3, bash, curl; about 20 minutes); the shop opens at `http://localhost:8089/` and the admin password is made on your machine in `bullion-shop/build/admin_password.txt`. Limits: [bullion-shop/docs/bullion-shop.md](bullion-shop/docs/bullion-shop.md#limits).
 
 ## What the keyword and AI scripts found
 
@@ -62,7 +81,7 @@ The AI check asked a local qwen3.5:9b model 12 of those questions three times ea
 
 ## What the launched site shows
 
-The six page site is live on a free WordPress.com subdomain and was built from the keyword research content map: a front page, three topic pages, a questions page and an about page, with a menu and a footer. Its pages score 12 to 13 of 15 on the audit. The misses are no JSON-LD, which the free plan has no plugin for, one 403 on WordPress.com's own login link, and two titles over the length limit because the site title is added to each page title. The causes and the free plan limits are written up in [docs/launched-site.md](docs/launched-site.md), with screenshots at 1280 and 390 pixels wide and a page edited and reverted in the block editor. A later design pass compared the pages with Medscape Education, the American Heart Association course list and ACEP, then changed type, spacing, colour, the hero button, the phone menu and the footer in the block editor. The contrast check finds no text under WCAG AA on any page at either width. The before and after pictures and the free plan limits it hit are in the same file, under Design pass.
+A six page site on a free WordPress.com subdomain, built from the keyword research content map, scores 12 to 13 of 15 on the audit, with a design pass and a QA defect report. Details, screenshots and the free plan limits: [docs/launched-site.md](docs/launched-site.md), [docs/launched-site-summary.md](docs/launched-site-summary.md) and [docs/qa-defect-report.md](docs/qa-defect-report.md).
 
 ## Run it
 
@@ -93,4 +112,5 @@ The local login is `admin` / `admin-local-only` at `http://localhost:8087/wp-adm
 - The page was assembled through the editor's command API in a headless browser. Elementor itself produced and saved the page data. The editor opens and edits the result normally.
 - Only free Elementor widgets are used, so the request section is a mailto line. Next step: Pro widgets such as forms and loop grids.
 - The keyword suggestions are not search volumes, because no keyless source gives volumes. The AI answer check asks a model: the sample run used a local model, which does not browse and is not ChatGPT or Perplexity. Google AI Overviews have no API and are not checked.
+- The bullion shop is a local lab with invented products and a stand-in price feed, not a client store. It has no page cache and no real traffic, so conversion, revenue and rankings are not measured.
 - The audit checks one page's technical basics, with alt text and heading order as its accessibility checks. Next steps: rankings and speed under load.

@@ -1,0 +1,4 @@
+page                         status   TTFB s  total s   feed calls
+/                               200     0.07     0.08 0 in 6 loads
+/shop/                          200     0.06     0.06 0 in 6 loads
+/product/gold-bar-1oz/          200     0.06     0.06 0 in 6 loads

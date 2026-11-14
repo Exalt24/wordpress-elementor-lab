@@ -1,0 +1,9 @@
+PASS  the JSON-LD parses
+PASS  exactly one Product node   [1 found]
+PASS  name and sku present
+PASS  an Offer with a price and a currency   [1707.36]
+PASS  availability is a schema.org URL   [https://schema.org/InStock]
+PASS  priceValidUntil is close, so a live price does not claim to last   [0 seconds from now]
+PASS  the offered price is a price printed on the page   [offer 1707.36, page ['0.00', '1600.13', '1707.36', '1728.80']]
+
+7 of 7 checks pass

@@ -1,0 +1,15 @@
+FAIL  header X-Content-Type-Options   [missing]
+FAIL  header X-Frame-Options   [missing]
+FAIL  header Referrer-Policy   [missing]
+FAIL  header Permissions-Policy   [missing]
+PASS  no X-Pingback header
+FAIL  no generator tag
+FAIL  XML-RPC refused   [status 200]
+FAIL  users list closed to visitors   [status 200]
+FAIL  author enumeration closed   [http://localhost:8089/author/admin/]
+FAIL  scanner probes refused   [/.env 404, /wp-config.php.bak 404, sqlmap agent 200]
+FAIL  site search is rate limited   [no 429 in 45 requests]
+FAIL  dashboard code editor disabled   [status 200]
+FAIL  login limits: the correct password is refused after five failures   [logged in]
+
+1 of 13 checks pass

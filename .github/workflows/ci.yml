@@ -9,7 +9,7 @@ concurrency:
 jobs:
   offline-tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -25,5 +25,11 @@ jobs:
         run: find opencart/extension -name '*.php' -print0 | xargs -0 -n1 php -l
       - name: OpenCart extension, markup tests
         run: php opencart/tests/test_markup.php
+      - name: Bullion shop, PHP syntax
+        run: find bullion-shop/mu-plugins -name '*.php' -print0 | xargs -0 -n1 php -l
+      - name: Bullion shop, rule tests
+        run: php bullion-shop/tests/test_logic.php
+      - name: Bullion shop, script tests
+        run: python bullion-shop/tests/test_scripts.py
       - name: Deliberate breakage check
         run: python tests/mutation_check.py

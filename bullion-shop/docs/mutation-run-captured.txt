@@ -1,0 +1,98 @@
+mutation_check.py, run in four slices (MUT_FROM and MUT_TO) because one run takes over twenty minutes; each slice first passes the unbroken copy
+
+== slice A
+CAUGHT  relevance guard removed
+CAUGHT  source agreement ignored
+CAUGHT  position ignored
+CAUGHT  intent cap removed
+CAUGHT  word limit removed
+CAUGHT  FAQ rule removed
+CAUGHT  pillar not marked
+CAUGHT  request errors not counted
+CAUGHT  wrong shape accepted
+CAUGHT  case not folded
+CAUGHT  never trimmed
+CAUGHT  cluster not sorted by score
+CAUGHT  short phrases offered as questions
+CAUGHT  one keyword pages kept
+CAUGHT  pillar does not link down
+CAUGHT  no start boundary
+CAUGHT  no end boundary
+CAUGHT  name not folded to lower case
+CAUGHT  error treated as an answer
+CAUGHT  interval drops its second term
+
+20 of 20 breaks caught
+
+== slice B
+CAUGHT  no trials not handled
+CAUGHT  streaming left on
+CAUGHT  key not sent
+CAUGHT  no answers reported as zero percent
+CAUGHT  base href ignored for relative links
+CAUGHT  script can be closed by a product name
+CAUGHT  stock ignored
+CAUGHT  open graph values not escaped
+CAUGHT  canonical keeps view parameters
+CAUGHT  page one gets a page parameter
+CAUGHT  store name added twice
+CAUGHT  title may pass 65 characters
+CAUGHT  headings with attributes retagged
+CAUGHT  sitemap address not escaped
+CAUGHT  sitemap date not cut to the day
+CAUGHT  description not cut on a word
+CAUGHT  markup injected into html with no head
+CAUGHT  sku and image invented when missing
+CAUGHT  last crumb always linked
+CAUGHT  a stale price is shown for ever
+
+20 of 20 breaks caught
+
+== slice C
+CAUGHT  a wild reading is accepted
+CAUGHT  the cache lifetime is ignored
+CAUGHT  the fetch lock is ignored
+CAUGHT  a zero price is accepted
+CAUGHT  a string price is accepted
+CAUGHT  a feed that throws is not caught
+CAUGHT  the jump limit is far too wide
+CAUGHT  the premium is ignored
+CAUGHT  buy back can go negative
+CAUGHT  the price claims to last the year
+CAUGHT  an Offer is written with no price
+CAUGHT  a product name can close the script
+CAUGHT  stock is ignored
+CAUGHT  an item with no price is listed
+CAUGHT  feed text is not escaped
+CAUGHT  the price loses its decimals
+CAUGHT  the fifth failure does not lock
+CAUGHT  old failures are never forgotten
+CAUGHT  a forged forwarding header picks the key
+CAUGHT  the lock holds one second too long
+
+20 of 20 breaks caught
+
+== slice D
+CAUGHT  HSTS is sent on plain http
+CAUGHT  nosniff is not sent
+CAUGHT  a question with no answer goes into the markup
+CAUGHT  an empty FAQ still writes markup
+CAUGHT  a stylesheet is left blocking
+CAUGHT  the noscript copy is dropped
+CAUGHT  the main stylesheet would be dropped
+CAUGHT  an attack tool user agent passes
+CAUGHT  the path is not lower cased
+CAUGHT  the path is not percent decoded
+CAUGHT  a secret file name is not matched
+CAUGHT  a site that refuses no scanner probe passes
+CAUGHT  the 30th request in a minute is refused
+CAUGHT  the window never rolls over
+CAUGHT  every page is limited as search
+CAUGHT  a site that never rate limits passes
+CAUGHT  author enumeration is never reported
+CAUGHT  a login that succeeds after the failures passes
+CAUGHT  a price valid for any length of time passes
+
+19 of 19 breaks caught
+
+total: 79 of 79 breaks caught, 0 survived

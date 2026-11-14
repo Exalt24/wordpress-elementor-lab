@@ -1,0 +1,15 @@
+PASS  header X-Content-Type-Options   [nosniff]
+PASS  header X-Frame-Options   [SAMEORIGIN]
+PASS  header Referrer-Policy   [strict-origin-when-cross-origin]
+PASS  header Permissions-Policy   [geolocation=(), microphone=(), camera=()]
+PASS  no X-Pingback header
+PASS  no generator tag
+PASS  XML-RPC refused   [status 403]
+PASS  users list closed to visitors   [status 404]
+PASS  author enumeration closed   [http://localhost:8089/]
+PASS  scanner probes refused   [/.env 403, /wp-config.php.bak 403, sqlmap agent 403]
+PASS  site search is rate limited   [a 429 after 31 requests]
+PASS  dashboard code editor disabled   [status 403]
+PASS  login limits: the correct password is refused after five failures   [refused with the lock message]
+
+13 of 13 checks pass
