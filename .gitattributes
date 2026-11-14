@@ -6,3 +6,5 @@
 *.gif binary
 *.mp4 binary
 *.png binary
+Dockerfile text eol=lf
+*/Dockerfile text eol=lf
