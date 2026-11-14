@@ -1,0 +1,28 @@
+services:
+  db:
+    image: mariadb:11
+    environment:
+      MARIADB_DATABASE: oc
+      MARIADB_USER: oc
+      MARIADB_PASSWORD: oc-local-only
+      MARIADB_ROOT_PASSWORD: root-local-only
+    volumes:
+      - ocdb:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  shop:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8088:80"
+    volumes:
+      - ./extension/seolab:/var/www/html/extension/seolab
+
+volumes:
+  ocdb:

@@ -1,0 +1,57 @@
+### http://localhost:8088/
+PASS  page loads with 200   (status 200)
+PASS  no redirect chain   (final url http://localhost:8088/)
+FAIL  title present and 30-65 characters   (10 characters: 'Your Store')
+FAIL  meta description present and 70-160 characters   (0 characters)
+FAIL  exactly one h1   (0 found)
+PASS  heading levels do not skip   (h5 > h5 > h5 > h5)
+PASS  every image has an alt attribute   (14 images, 0 without alt)
+FAIL  canonical link present   (missing)
+PASS  html lang attribute present   (en)
+PASS  viewport meta present   (width=device-width, initial-scale=1)
+FAIL  Open Graph title, description, type and url present   (has [])
+FAIL  structured data (JSON-LD) present and valid   (no JSON-LD block)
+FAIL  no broken links   (23 http links checked, broken: [('http://localhost:8088/index.php?route=product/product&path=57&product_id=49', 404)])
+PASS  server responds in under 1.5 s   (0.13s)
+PASS  HTML under 200 KB   (15 KB)
+
+8/15 checks pass, 7 to fix
+
+### http://localhost:8088/index.php?route=product/category&language=en-gb&path=1
+PASS  page loads with 200   (status 200)
+PASS  no redirect chain   (final url http://localhost:8088/index.php?route=product/category&language=en-gb&path=1)
+FAIL  title present and 30-65 characters   (9 characters: 'Backpacks')
+FAIL  meta description present and 70-160 characters   (0 characters)
+PASS  exactly one h1   (1 found)
+FAIL  heading levels do not skip   (h1 > h4 > h4 > h4 > h5 > h5 > h5 > h5)
+PASS  every image has an alt attribute   (6 images, 0 without alt)
+PASS  canonical link present   (http://localhost:8088/index.php?route=product/category&language=en-gb&path=1)
+PASS  html lang attribute present   (en)
+PASS  viewport meta present   (width=device-width, initial-scale=1)
+FAIL  Open Graph title, description, type and url present   (has [])
+FAIL  structured data (JSON-LD) present and valid   (no JSON-LD block)
+PASS  no broken links   (27 http links checked)
+PASS  server responds in under 1.5 s   (0.15s)
+PASS  HTML under 200 KB   (21 KB)
+
+10/15 checks pass, 5 to fix
+
+### http://localhost:8088/index.php?route=product/product&language=en-gb&product_id=101
+PASS  page loads with 200   (status 200)
+PASS  no redirect chain   (final url http://localhost:8088/index.php?route=product/product&language=en-gb&product_id=101)
+FAIL  title present and 30-65 characters   (17 characters: 'Summit 30 Daypack')
+FAIL  meta description present and 70-160 characters   (0 characters)
+PASS  exactly one h1   (1 found)
+FAIL  heading levels do not skip   (h1 > h2 > h2 > h5 > h5 > h5 > h5)
+PASS  every image has an alt attribute   (2 images, 0 without alt)
+PASS  canonical link present   (http://localhost:8088/index.php?route=product/product&language=en-gb&product_id=101)
+PASS  html lang attribute present   (en)
+PASS  viewport meta present   (width=device-width, initial-scale=1)
+FAIL  Open Graph title, description, type and url present   (has [])
+FAIL  structured data (JSON-LD) present and valid   (no JSON-LD block)
+PASS  no broken links   (25 http links checked)
+PASS  server responds in under 1.5 s   (0.06s)
+PASS  HTML under 200 KB   (20 KB)
+
+10/15 checks pass, 5 to fix
+

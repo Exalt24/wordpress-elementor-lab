@@ -27,6 +27,7 @@ class Page(HTMLParser):
         self.images = []        # (src, alt or None)
         self.links = []         # href
         self.canonical = None
+        self.base = None        # <base href>: relative links resolve against it, not the page address
         self.lang = None
         self.jsonld = []
         self._in_jsonld = False
@@ -42,6 +43,8 @@ class Page(HTMLParser):
             key = a.get("name") or a.get("property")
             if key:
                 self.meta[key.lower()] = a.get("content", "")
+        elif tag == "base" and a.get("href") and self.base is None:
+            self.base = a["href"]
         elif tag == "link" and a.get("rel") == "canonical":
             self.canonical = a.get("href")
         elif tag in ("h1", "h2", "h3", "h4", "h5", "h6"):
@@ -126,10 +129,10 @@ def audit(url):
             schema_ok, schema_detail = False, f"JSON-LD does not parse: {e}"
     check("structured data (JSON-LD) present and valid", schema_ok, schema_detail)
 
-    base = urllib.parse.urlparse(url)
+    root = urllib.parse.urljoin(url, p.base) if p.base else url
     seen, bad = set(), []
     for href in p.links:
-        full = urllib.parse.urljoin(url, href)
+        full = urllib.parse.urljoin(root, href)
         if full.startswith("mailto:") or full.startswith("tel:") or full.split("#")[0] in seen or not full.startswith("http"):
             continue
         seen.add(full.split("#")[0])

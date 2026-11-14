@@ -1,0 +1,3 @@
+
+# SEO Lab: the sitemap lives at the site root
+RewriteRule ^sitemap\.xml$ index.php?route=extension/seolab/feed/sitemap [L]

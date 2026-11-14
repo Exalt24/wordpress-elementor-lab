@@ -28,6 +28,22 @@ def expect_only(name_fragment, html):
     return good
 
 
+def base_href_resolves_links():
+    """A page with <base href> must have its relative links checked against the base, the way a browser follows them (OpenCart does this)."""
+    asked = []
+    page = GOOD.replace("<h1>One</h1>", '<h1>One</h1><a href="index.php?route=a">x</a>').replace("<head>", '<head><base href="http://t/shop/"/>')
+
+    def fake(u, method="GET", timeout=20):
+        asked.append(u)
+        return (200 if u in ("http://t/p/", "http://t/shop/index.php?route=a") else 404), page.encode(), 0.05, u
+
+    seo_audit.fetch = fake
+    results = {name: ok for name, ok, _ in seo_audit.audit("http://t/p/")}
+    good = results["no broken links"] and "http://t/shop/index.php?route=a" in asked and "http://t/p/index.php?route=a" not in asked
+    print(("PASS  " if good else "FAIL  ") + "a relative link is checked against the page's base href")
+    return good
+
+
 def main():
     ok = True
     base = run(GOOD)
@@ -42,6 +58,7 @@ def main():
     ok &= expect_only("lang attribute", GOOD.replace(' lang="en"', ""))
     ok &= expect_only("structured data", GOOD.replace('"@type":"Service","name":"x"}', '"@type":"Service","name":'))
     ok &= expect_only("Open Graph", GOOD.replace('property="og:url"', 'property="x:url"'))
+    ok &= base_href_resolves_links()
     print("\nall tests passed" if ok else "\nSOME FAILED")
     sys.exit(0 if ok else 1)
 

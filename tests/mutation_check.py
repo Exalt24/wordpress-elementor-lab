@@ -13,8 +13,10 @@ import sys
 import tempfile
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-TESTS = ["tests/test_keyword_research.py", "tests/test_ai_visibility.py"]
-KR, AV = "scripts/keyword_research.py", "scripts/ai_visibility.py"
+TESTS = ["tests/test_keyword_research.py", "tests/test_ai_visibility.py", "tests/test_seo_audit.py"]
+PHP_TEST = "opencart/tests/test_markup.php"
+KR, AV, SA = "scripts/keyword_research.py", "scripts/ai_visibility.py", "scripts/seo_audit.py"
+MK = "opencart/extension/seolab/system/library/markup.php"
 
 MUTANTS = [
     (KR, "relevance guard removed", "if not seed_words & set(content_words(kw)):", "if False:"),
@@ -41,7 +43,29 @@ MUTANTS = [
     (AV, "streaming left on", '"stream": False', '"stream": True'),
     (AV, "key not sent", '{"Authorization": "Bearer " + self.key}', "{}"),
     (AV, "no answers reported as zero percent", 'pct(k / total) if total else "n/a"', 'pct(k / total) if total else "0%"'),
+    (SA, "base href ignored for relative links", "root = urllib.parse.urljoin(url, p.base) if p.base else url", "root = url"),
+    (MK, "script can be closed by a product name", " | JSON_HEX_TAG | JSON_HEX_AMP", ""),
+    (MK, "stock ignored", "((int)($p['quantity'] ?? 0) > 0) ? 'https://schema.org/InStock'", "true ? 'https://schema.org/InStock'"),
+    (MK, "open graph values not escaped", "htmlspecialchars($content, ENT_QUOTES, 'UTF-8')", "$content"),
+    (MK, "canonical keeps view parameters", "$query = array_intersect_key($query, array_flip($keep));", "$query = $query;"),
+    (MK, "page one gets a page parameter", "if (isset($query['page']) && (int)$query['page'] <= 1) {", "if (false) {"),
+    (MK, "store name added twice", "mb_stripos($title, $store) === false", "true"),
+    (MK, "title may pass 65 characters", "return mb_strlen($longer) <= $max ? $longer : $title;", "return $longer;"),
+    (MK, "headings with attributes retagged", "'#<h' . $from . '>(.*?)</h'", "'#<h' . $from . '[^>]*>(.*?)</h'"),
+    (MK, "sitemap address not escaped", "htmlspecialchars($row[0], ENT_XML1 | ENT_QUOTES, 'UTF-8')", "$row[0]"),
+    (MK, "sitemap date not cut to the day", "substr($row[1], 0, 10)", "$row[1]"),
+    (MK, "description not cut on a word", 'rtrim($space === false ? $cut : mb_substr($cut, 0, $space), " ,;:.-") . \'…\'', "$cut . '…'"),
+    (MK, "markup injected into html with no head", "$pos === false || $markup === ''", "$markup === ''"),
+    (MK, "sku and image invented when missing", "if (!empty($p[$source])) {", "if (true) {"),
+    (MK, "last crumb always linked", "if ($crumb[1] !== '') {", "if (true) {"),
 ]
+
+
+def php_command(folder):
+    """The command that runs the PHP test: a local php when there is one, else the official php image with the folder mounted."""
+    if shutil.which("php"):
+        return ["php", os.path.join(folder, PHP_TEST)]
+    return ["docker", "run", "--rm", "-v", folder + ":/lab", "-w", "/lab", "php:8.2-cli", "php", PHP_TEST]
 
 
 def run_tests(folder):
@@ -49,7 +73,8 @@ def run_tests(folder):
         r = subprocess.run([sys.executable, "-I", os.path.join(folder, t)], cwd=folder, capture_output=True, text=True, encoding="utf-8", timeout=120)
         if r.returncode != 0:
             return False
-    return True
+    r = subprocess.run(php_command(folder), cwd=folder, capture_output=True, text=True, encoding="utf-8", timeout=180)
+    return r.returncode == 0
 
 
 def main():

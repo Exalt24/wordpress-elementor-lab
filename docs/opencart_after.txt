@@ -1,0 +1,57 @@
+### http://localhost:8088/
+PASS  page loads with 200   (status 200)
+PASS  no redirect chain   (final url http://localhost:8088/)
+PASS  title present and 30-65 characters   (32 characters: 'Your Store | Pinewick Outfitters')
+PASS  meta description present and 70-160 characters   (144 characters)
+PASS  exactly one h1   (1 found)
+PASS  heading levels do not skip   (h1 > h2 > h2 > h2 > h2 > h2 > h2 > h2 > h2 > h2)
+PASS  every image has an alt attribute   (5 images, 0 without alt)
+PASS  canonical link present   (http://localhost:8088/)
+PASS  html lang attribute present   (en)
+PASS  viewport meta present   (width=device-width, initial-scale=1)
+PASS  Open Graph title, description, type and url present   (has ['og:title', 'og:description', 'og:type', 'og:url'])
+PASS  structured data (JSON-LD) present and valid   (valid JSON-LD, @type None)
+PASS  no broken links   (26 http links checked)
+PASS  server responds in under 1.5 s   (0.13s)
+PASS  HTML under 200 KB   (17 KB)
+
+15/15 checks pass
+
+### http://localhost:8088/en-gb/catalog/backpacks
+PASS  page loads with 200   (status 200)
+PASS  no redirect chain   (final url http://localhost:8088/en-gb/catalog/backpacks)
+PASS  title present and 30-65 characters   (31 characters: 'Backpacks | Pinewick Outfitters')
+PASS  meta description present and 70-160 characters   (91 characters)
+PASS  exactly one h1   (1 found)
+PASS  heading levels do not skip   (h1 > h2 > h2 > h2 > h2 > h2 > h2 > h2)
+PASS  every image has an alt attribute   (6 images, 0 without alt)
+PASS  canonical link present   (http://localhost:8088/en-gb/catalog/backpacks)
+PASS  html lang attribute present   (en)
+PASS  viewport meta present   (width=device-width, initial-scale=1)
+PASS  Open Graph title, description, type and url present   (has ['og:title', 'og:description', 'og:type', 'og:url'])
+PASS  structured data (JSON-LD) present and valid   (valid JSON-LD, @type None)
+PASS  no broken links   (27 http links checked)
+PASS  server responds in under 1.5 s   (0.08s)
+PASS  HTML under 200 KB   (20 KB)
+
+15/15 checks pass
+
+### http://localhost:8088/en-gb/product/summit-30-daypack
+PASS  page loads with 200   (status 200)
+PASS  no redirect chain   (final url http://localhost:8088/en-gb/product/summit-30-daypack)
+PASS  title present and 30-65 characters   (39 characters: 'Summit 30 Daypack | Pinewick Outfitters')
+PASS  meta description present and 70-160 characters   (125 characters)
+PASS  exactly one h1   (1 found)
+PASS  heading levels do not skip   (h1 > h2 > h2 > h2 > h2 > h2 > h2)
+PASS  every image has an alt attribute   (2 images, 0 without alt)
+PASS  canonical link present   (http://localhost:8088/en-gb/product/summit-30-daypack)
+PASS  html lang attribute present   (en)
+PASS  viewport meta present   (width=device-width, initial-scale=1)
+PASS  Open Graph title, description, type and url present   (has ['og:title', 'og:description', 'og:type', 'og:url'])
+PASS  structured data (JSON-LD) present and valid   (valid JSON-LD, @type None)
+PASS  no broken links   (25 http links checked)
+PASS  server responds in under 1.5 s   (0.07s)
+PASS  HTML under 200 KB   (20 KB)
+
+15/15 checks pass
+

@@ -1,0 +1,42 @@
+### sitemap.xml
+HTTP/1.1 200 OK
+Date: Sat, 14 Nov 2026 16:19:20 GMT
+Server: Apache/2.4.69 (Debian)
+X-Content-Type-Options: nosniff
+X-Powered-By: PHP/8.2.35
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+Pragma: no-cache
+Set-Cookie: OCSESSID=0df80d09666090ce6facd098c8; expires=Sun, 15 Nov 2026 16:19:20 GMT; Max-Age=86400; path=/; HttpOnly; SameSite=Strict
+Set-Cookie: currency=USD; expires=Mon, 14 Dec 2026 16:19:20 GMT; Max-Age=2592000; path=/; HttpOnly; SameSite=Lax
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 1000
+Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Cache-Control, Pragma, Authorization, Accept, Accept-Encoding
+Access-Control-Allow-Methods: PUT, POST, GET, OPTIONS, DELETE
+Vary: Accept-Encoding
+Content-Length: 945
+Content-Type: application/xml; charset=utf-8
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+### robots.txt
+User-agent: *
+Disallow: /admin/
+Disallow: /system/
+Disallow: /*route=checkout/
+Disallow: /*route=account/
+Disallow: /*route=product/search
+Disallow: /*?*sort=
+Disallow: /*?*limit=
+Disallow: /en-gb/checkout
+Disallow: /en-gb/account
+Disallow: /en-gb/product/search
+
+Sitemap: http://localhost:8088/sitemap.xml
+
+### the old address of a product still answers, and its canonical points at the one address
+<link href="http://localhost:8088/en-gb/product/summit-30-daypack" rel="canonical"/>
+
+### JSON-LD on the product page
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"http://localhost:8088/"},{"@type":"ListItem","position":2,"name":"Summit 30 Daypack"}]},{"@type":"Product","name":"Summit 30 Daypack","description":"A 30 litre daypack for long day hikes. It has a rain cover, a ventilated back panel and a pocket for a 2 litre water bladder.","url":"http://localhost:8088/en-gb/product/summit-30-daypack","offers":{"@type":"Offer","url":"http://localhost:8088/en-gb/product/summit-30-daypack","price":"79.00","priceCurrency":"USD","availability":"https://schema.org/InStock"},"image":"http://localhost:8088/image/catalog/pinewick/summit-30.png","sku":"PW-DP30"}]}</script>

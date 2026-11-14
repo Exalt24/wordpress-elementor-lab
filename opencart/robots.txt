@@ -1,0 +1,13 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /system/
+Disallow: /*route=checkout/
+Disallow: /*route=account/
+Disallow: /*route=product/search
+Disallow: /*?*sort=
+Disallow: /*?*limit=
+Disallow: /en-gb/checkout
+Disallow: /en-gb/account
+Disallow: /en-gb/product/search
+
+Sitemap: http://localhost:8088/sitemap.xml

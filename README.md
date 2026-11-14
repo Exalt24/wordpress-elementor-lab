@@ -2,11 +2,13 @@
 
 ![The Elementor editor holding the page, the published page, then the technical SEO audit failing three checks and passing all fifteen after the fix](docs/demo.gif)
 
-Landing page built in the real Elementor editor on local WordPress, then audited with a 15 check SEO script.
+Landing page built in the real Elementor editor on local WordPress, audited with a 15 check SEO script, and the same audit run on a stock OpenCart store that an extension then fixes.
 
 [![tests](https://github.com/Exalt24/wordpress-elementor-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/Exalt24/wordpress-elementor-lab/actions/workflows/ci.yml)
 
 The audit found three things missing. A small must-use plugin fixes them, and a re-run passes. Everything runs locally in Docker. The page is a demo for an Amazon seller-audit service concept and says so in its footer.
+
+The same audit then ran on a stock OpenCart 4 store (PHP) with a small sample catalogue. A fresh OpenCart scores 8, 10 and 10 of 15 on its home, category and product pages, and an extension plus a few settings take all three to 15 of 15. See [What the OpenCart store shows](#what-the-opencart-store-shows).
 
 ## What is in it
 
@@ -16,10 +18,12 @@ The audit found three things missing. A small must-use plugin fixes them, and a 
 | `scripts/build_page.cjs` | Opens the Elementor editor in a headless browser and builds the page with the editor's own command API (`$e.run('document/elements/create')`), then saves with the editor's publish command. Five sections: hero, three audit cards, how it works, request, footer note. Free widgets only |
 | `scripts/seo_audit.py` | A 15-check technical SEO audit: status and redirects, title and meta description length, one h1, heading order, image alt text, canonical, language, viewport, Open Graph, valid JSON-LD, broken links, response time, page weight. Standard library only |
 | `wp/mu-plugins/seo-basics.php` | The fix for what the audit found: meta description from the page excerpt, Open Graph tags and a Service JSON-LD block |
-| `tests/test_seo_audit.py` | Nine offline tests: a clean page passes everything, and eight pages with exactly one defect each fail exactly that check |
+| `tests/test_seo_audit.py` | Ten offline tests: a clean page passes everything, eight pages with exactly one defect each fail exactly that check, and a relative link is checked against the page's `<base href>` (the OpenCart crawl showed the audit was getting that wrong) |
 | `scripts/keyword_research.py` | Keyword and topic research from Google, Bing and DuckDuckGo autocomplete (no key): expands seeds with question and modifier words, scores by source agreement and position, groups the keywords into pages and writes a content map with internal links and title and meta drafts |
 | `scripts/ai_visibility.py` | Asks a model a list of questions several times and counts how often named organisations appear in the answers, with a 95 percent Wilson interval. Runs on a local Ollama model or any OpenAI compatible endpoint |
-| `tests/test_keyword_research.py`, `tests/test_ai_visibility.py`, `tests/mutation_check.py` | 37 and 19 offline checks, and a script that breaks 24 guards one at a time and needs a test to go red each time. CI runs all of them |
+| `tests/test_keyword_research.py`, `tests/test_ai_visibility.py`, `tests/mutation_check.py` | 37 and 19 offline checks, and a script that breaks 39 guards one at a time (Python and PHP) and needs a test to go red each time. CI runs all of them |
+| `opencart/` | A stock OpenCart 4.1 store in Docker (PHP 8.2, MariaDB) with a six product sample catalogue, and the fix as an OpenCart extension, `opencart/extension/seolab/`, wired in with six events so no core file is edited: canonical links, meta descriptions, Open Graph tags, JSON-LD (Organization, WebSite, BreadcrumbList, Product with stock and price), a home page `h1`, heading order, a title length rule and an XML sitemap. `opencart/robots.txt` and an `.htaccess` rewrite sit beside it. `opencart/scripts/run_lab.sh` builds the store, audits it, applies the fix, audits again and writes `docs/opencart_before.txt`, `docs/opencart_after.txt` and `docs/opencart_checks.txt` |
+| `opencart/tests/test_markup.php` | 29 offline PHP checks on the markup builders, each on a good input and a hostile or empty one (a product name that tries to close the JSON-LD script tag, a sitemap address with an ampersand, an out of stock product). CI runs them on Linux with the runner's PHP |
 | `docs/launched-site.md` | A public six page WordPress.com site on the free plan, built in the block editor from the keyword research content map: https://emergencycaretrainingguidesample.wordpress.com/ . Audited with the same 15 checks, with the screenshots, the audit outputs and an edit and revert in the editor saved beside it, then a design pass against three medical education sites with before and after screenshots, and `scripts/contrast_check.cjs` for computed contrast, tap size and overflow |
 | `docs/qa-defect-report.md` | A QA defect report from testing the launched site and a second sample site at 1280 and 390 pixels wide: 9 reproduced defects with steps, expected and actual results, cropped screenshots and a suggested fix each, then the list of what was checked and found clean. Screenshots are in `docs/qa-defect-report/` |
 
@@ -30,6 +34,25 @@ The first run on the freshly built page scored **12 of 15**. It was missing the 
 The screenshot below is the page at 390 px wide, with the cards stacked.
 
 ![The page at phone width](docs/page-phone.png)
+
+## What the OpenCart store shows
+
+OpenCart is a PHP storefront, so the fixes live in PHP and Twig, not in a plugin screen. `bash opencart/scripts/run_lab.sh` builds the stock store, audits three pages, applies the fix and audits them again. Both outputs are in `docs/opencart_before.txt` and `docs/opencart_after.txt`.
+
+| Page | Fresh OpenCart | After the fix |
+|---|---|---|
+| Home | 8 of 15: title is "Your Store", no meta description, no `h1`, no canonical, no Open Graph, no JSON-LD, and a slideshow link to a demo product that returns a 404 | 15 of 15 |
+| Category | 10 of 15: a 9 character title, no meta description, heading levels jump from `h1` to `h4`, no Open Graph, no JSON-LD | 15 of 15 |
+| Product | 10 of 15: a 17 character title, no meta description, headings jump from `h2` to `h5`, no Open Graph, no JSON-LD | 15 of 15 |
+
+What changed, and where:
+
+- **Settings and data** (`opencart/scripts/fix_settings.sql`): a store name, a home title and description, SEO URLs switched on (`/en-gb/product/summit-30-daypack` instead of `index.php?route=product/product&product_id=101`), and the home page modules pointed at products that exist.
+- **Crawl and index**: `sitemap.xml` lists the home page, both categories and all six products, with the day each product changed. `robots.txt` keeps crawlers out of checkout, account, search and sorted listing addresses, and those pages also carry `noindex,follow`. The old `index.php?route=` address of a product still answers, and its canonical points at the one clean address, with sort and limit parameters dropped.
+- **Structured data**: the Product node carries price, currency, SKU, image and stock, so the sold out Trail 20 Daypack reads `OutOfStock`. A missing image or SKU is left out, never invented. The JSON-LD is encoded so a product name containing `</script>` cannot end the block early, and a test proves it.
+- **Headings and titles**: product card titles and footer column titles keep their look but move to `h2`, so the outline stops skipping levels. A short title gets the store name added, and a title over 65 characters is cut on a word.
+
+The audit also had a bug of its own. On OpenCart's category page it reported a link as broken that a browser follows fine, because OpenCart sets `<base href>` and the audit resolved relative links against the page address instead. It now follows the base, with a test and a mutant for it.
 
 ## What the keyword and AI scripts found
 
@@ -42,6 +65,8 @@ The AI check asked a local qwen3.5:9b model 12 of those questions three times ea
 The six page site is live on a free WordPress.com subdomain and was built from the keyword research content map: a front page, three topic pages, a questions page and an about page, with a menu and a footer. Its pages score 12 to 13 of 15 on the audit. The misses are no JSON-LD, which the free plan has no plugin for, one 403 on WordPress.com's own login link, and two titles over the length limit because the site title is added to each page title. The causes and the free plan limits are written up in [docs/launched-site.md](docs/launched-site.md), with screenshots at 1280 and 390 pixels wide and a page edited and reverted in the block editor. A later design pass compared the pages with Medscape Education, the American Heart Association course list and ACEP, then changed type, spacing, colour, the hero button, the phone menu and the footer in the block editor. The contrast check finds no text under WCAG AA on any page at either width. The before and after pictures and the free plan limits it hit are in the same file, under Design pass.
 
 ## Run it
+
+The OpenCart store needs only Docker, Python 3, `bash` and `curl`: `bash opencart/scripts/run_lab.sh` (about two minutes), then browse `http://localhost:8088/` and the admin at `/admin/` (`admin` / `admin-local-only`). `bash opencart/scripts/setup.sh` returns it to the stock store and `bash opencart/scripts/fix.sh` applies the fix again. The WordPress part below needs the extras it lists.
 
 Needs Docker, Python 3, `bash` and `curl`, and Node with Playwright installed globally (`npm install -g playwright`). The build and screenshot scripts load Playwright from the global npm folder of a Windows user (under `%APPDATA%`). On another system, change the `require` line at the top of each.
 
@@ -64,7 +89,7 @@ The local login is `admin` / `admin-local-only` at `http://localhost:8087/wp-adm
 
 ## Scope and next steps
 
-- It runs as a local site in Docker. The page is a demo for a service concept.
+- It runs as a local site in Docker. The page is a demo for a service concept. The OpenCart shop is a made-up outdoor store with six products and flat drawn pictures, not a live shop, and its fix was tested on a local store, not on a store under traffic.
 - The page was assembled through the editor's command API in a headless browser. Elementor itself produced and saved the page data. The editor opens and edits the result normally.
 - Only free Elementor widgets are used, so the request section is a mailto line. Next step: Pro widgets such as forms and loop grids.
 - The keyword suggestions are not search volumes, because no keyless source gives volumes. The AI answer check asks a model: the sample run used a local model, which does not browse and is not ChatGPT or Perplexity. Google AI Overviews have no API and are not checked.
