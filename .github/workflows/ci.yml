@@ -45,3 +45,9 @@ jobs:
         run: python genesis-lab/scripts/mutation_check.py
       - name: Genesis lab, PHP syntax
         run: find genesis-lab/mu-plugins genesis-lab/child-theme genesis-lab/classic-child -name '*.php' -print0 | xargs -0 -n1 php -l
+      - name: Genesis lab, industry filter tests and mutation controls
+        run: python genesis-lab/tests/test_cases_filter.py
+      - name: Genesis lab, filter script and browser driver syntax
+        run: |
+          node --check genesis-lab/mu-plugins/lab-core-assets/cases-filter.js
+          node --check genesis-lab/scripts/check_filter.cjs
