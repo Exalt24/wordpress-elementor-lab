@@ -33,3 +33,15 @@ jobs:
         run: python bullion-shop/tests/test_scripts.py
       - name: Deliberate breakage check
         run: python tests/mutation_check.py
+      - name: Genesis lab, install the PSD libraries
+        run: pip install psd-tools pytoshop numpy
+      - name: Genesis lab, PSD converter tests and mutation controls
+        run: python genesis-lab/tests/test_psd_to_page.py
+      - name: Genesis lab, file checks for both themes
+        run: |
+          python genesis-lab/scripts/check_lab.py --offline --theme lab-classic
+          python genesis-lab/scripts/check_lab.py --offline --theme lab-child
+      - name: Genesis lab, deliberate breakage check
+        run: python genesis-lab/scripts/mutation_check.py
+      - name: Genesis lab, PHP syntax
+        run: find genesis-lab/mu-plugins genesis-lab/child-theme genesis-lab/classic-child -name '*.php' -print0 | xargs -0 -n1 php -l
