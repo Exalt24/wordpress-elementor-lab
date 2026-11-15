@@ -35,7 +35,8 @@ def offline() -> None:
     css, fn = read("style.css"), read("functions.php")
     check("style.css names Genesis as the parent", bool(re.search(r"^\s*Template:\s*genesis\s*$", css, re.M)))
     check("functions.php loads the Genesis bootstrap", "lib/init.php" in fn)
-    check("a case_study post type is registered", "register_post_type('case_study'" in fn and "'show_in_rest' => true" in fn)
+    post_type = fn[fn.find("register_post_type('case_study'"):fn.find("register_taxonomy(")]  # only the case_study block counts
+    check("a case_study post type is registered with REST on", "register_post_type('case_study'" in fn and "'show_in_rest' => true" in post_type)
     check("an industry taxonomy is registered", "register_taxonomy('industry'" in fn)
     check("ACF JSON is saved and loaded inside the theme", "acf/settings/save_json" in fn and "acf/settings/load_json" in fn)
     check("each printed value is escaped", fn.count("esc_html(") >= 4 and "esc_url(" in fn)

@@ -21,10 +21,10 @@ MUTATIONS = [
     ("unregister the industry taxonomy", "functions.php", "register_taxonomy('industry'", "register_taxonomy('xindustry'"),
     ("stop saving ACF JSON", "functions.php", "acf/settings/save_json", "acf/settings/xsave_json"),
     ("rename a Genesis footer hook", "functions.php", "genesis_footer_creds_text", "genesis_footer_xcreds_text"),
-    ("print the client name unescaped", "single-case_study.php", "esc_html(get_field('client_name'))", "get_field('client_name')"),
+    ("print the headline result unescaped", "functions.php", "esc_html($result) . '</p>';\n    }", "$result . '</p>';\n    }"),
     ("rename an ACF field the theme reads", "acf-json/group_case_study.json", '"name": "client_name"', '"name": "client_nm"'),
     ("widen the ACF group to every post", "acf-json/group_case_study.json", '"value": "case_study"', '"value": "post"'),
-    ("break the Genesis parent in style.css", "style.css", "Template: genesis", "Template: twentytwentyfour"),
+    ("break the Genesis parent in style.css", "style.css", "Template:     genesis", "Template:     twentytwentyfour"),
 ]
 
 
