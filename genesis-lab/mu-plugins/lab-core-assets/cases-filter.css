@@ -1,0 +1,14 @@
+/* The selectors are long on purpose: a parent theme styles every button with a long selector of its own, and these have to win without !important. */
+.case-filter, .case-status, .case-grid { width: 100%; max-width: var(--responsive--aligndefault-width, 860px); margin-left: auto; margin-right: auto; box-sizing: border-box; padding-left: 16px; padding-right: 16px; }
+.case-filter { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.case-filter[hidden] { display: none; }
+body .case-filter button.case-filter-button[aria-pressed] { min-height: 44px; padding: 8px 18px; border: 2px solid #102a43; border-radius: 999px; background: #fff; color: #102a43; font: inherit; line-height: 1.2; cursor: pointer; }
+body .case-filter button.case-filter-button[aria-pressed]:hover { background: #e3edf5; color: #102a43; }
+body .case-filter button.case-filter-button[aria-pressed="true"], body .case-filter button.case-filter-button[aria-pressed="true"]:hover { background: #102a43; color: #fff; }
+body .case-filter button.case-filter-button[aria-pressed]:focus:not(:focus-visible) { outline: none; }
+body .case-filter button.case-filter-button[aria-pressed]:focus-visible { outline: 3px solid #e85d04; outline-offset: 2px; }
+.case-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); transition: opacity 0.15s; }
+.case-grid .case-card { margin: 0; }
+.case-grid[aria-busy="true"] { opacity: 0.5; }
+.case-status { min-height: 1.5em; margin-bottom: 8px; color: #333; font-size: 14px; }
+.case-status.is-error { color: #b00020; font-weight: 600; }

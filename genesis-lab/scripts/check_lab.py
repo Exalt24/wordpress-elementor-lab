@@ -4,6 +4,7 @@ The lab has one set of functionality (mu-plugins/lab-core.php) and two child the
 plain Twenty Twenty-One parent. The theme under test is the one setup.sh wrote to .theme, or --theme <name>.
 Offline checks read the files and need no Docker. Live checks fetch the pages, ask WP-CLI about the database and exercise the sync:
 PROD must show DEV's content with every address rewritten, and a hostile case study must come out escaped.
+The industry filter has its own file checks (scripts/check_filter.py), run from here too, and its own live run in a browser (python scripts/check_filter.py).
     python scripts/check_lab.py            both
     python scripts/check_lab.py --offline  only the file checks
 """
@@ -16,6 +17,8 @@ import subprocess
 import sys
 import urllib.error
 import urllib.request
+
+import check_filter
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEV, PROD = "http://localhost:8091", "http://localhost:8092"
@@ -58,7 +61,9 @@ def offline(theme: str) -> None:
     check("a case_study post type is registered with REST on", "register_post_type('case_study'" in core and "'show_in_rest' => true" in post_type)
     check("an industry taxonomy is registered", "register_taxonomy('industry'" in core)
     check("ACF JSON is saved and loaded next to the plugin", "acf/settings/save_json" in core and "acf/settings/load_json" in core)
-    check("each printed value is escaped", core.count("esc_html(") >= 4 and "esc_url(" in core)
+    card = core[core.find("function lab_core_render_card"):core.find("/** How many cards a grid shows")]   # the card renderer on its own, so the filter's escapes cannot cover for it
+    content_filter = core[core.find("add_filter('the_content'"):]
+    check("each printed value is escaped", card.count("esc_html(") >= 3 and "esc_url(" in card and "esc_html($result)" in content_filter)
     check("no unescaped echo of a field", not re.search(r"echo\s+\$(client|result|post->post_title)\b", core + fn))
     check("the init action, the excerpt filter and the content filter are all registered",
           "add_action('init'" in core and "add_filter('excerpt_length'" in core and "add_filter('the_content'" in core)
@@ -71,6 +76,8 @@ def offline(theme: str) -> None:
     check("the ACF group holds the two fields the plugin reads", names == {"client_name", "headline_result"})
     check("every ACF field key is unique and prefixed", len({f["key"] for f in group["fields"]}) == len(group["fields"]) and all(f["key"].startswith("field_") for f in group["fields"]))
     check("the ACF group is limited to the case study type", group["location"][0][0]["value"] == "case_study")
+    for name, ok in check_filter.offline_checks():   # the industry filter's own file checks, kept in scripts/check_filter.py
+        check("filter: " + name, ok)
 
 
 def get(url: str) -> tuple[int, str]:
