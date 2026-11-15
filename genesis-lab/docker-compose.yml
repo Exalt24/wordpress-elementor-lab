@@ -1,0 +1,81 @@
+name: genesislab
+services:
+  db:
+    image: mariadb:11
+    environment:
+      MARIADB_ROOT_PASSWORD: root-local-only
+      MARIADB_USER: wp
+      MARIADB_PASSWORD: wp-local-only
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./scripts/init-databases.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  dev:
+    image: wordpress:6-apache
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8091:80"
+    environment: &wpenv
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wp
+      WORDPRESS_DB_PASSWORD: wp-local-only
+      WORDPRESS_DB_NAME: wp_dev
+    volumes:
+      - devdata:/var/www/html
+      - ./child-theme:/var/www/html/wp-content/themes/lab-child
+
+  prod:
+    image: wordpress:6-apache
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8092:80"
+    environment:
+      <<: *wpenv
+      WORDPRESS_DB_NAME: wp_prod
+    volumes:
+      - proddata:/var/www/html
+      - ./child-theme:/var/www/html/wp-content/themes/lab-child:ro
+
+  cli-dev:
+    image: wordpress:cli
+    depends_on:
+      - dev
+    user: "33:33"
+    environment:
+      <<: *wpenv
+      WORDPRESS_DB_NAME: wp_dev
+    volumes:
+      - devdata:/var/www/html
+      - ./child-theme:/var/www/html/wp-content/themes/lab-child
+      - ./vendor:/vendor:ro
+      - ./backups:/backups
+    profiles: ["tools"]
+
+  cli-prod:
+    image: wordpress:cli
+    depends_on:
+      - prod
+    user: "33:33"
+    environment:
+      <<: *wpenv
+      WORDPRESS_DB_NAME: wp_prod
+    volumes:
+      - proddata:/var/www/html
+      - ./child-theme:/var/www/html/wp-content/themes/lab-child:ro
+      - ./vendor:/vendor:ro
+      - ./backups:/backups
+    profiles: ["tools"]
+
+volumes:
+  dbdata:
+  devdata:
+  proddata:

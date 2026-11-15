@@ -1,0 +1,14 @@
+{
+    "key": "group_lab_case_study",
+    "title": "Case study details",
+    "fields": [
+        {"key": "field_lab_client_name", "label": "Client name", "name": "client_name", "type": "text", "required": 0},
+        {"key": "field_lab_headline_result", "label": "Headline result", "name": "headline_result", "type": "text", "required": 1,
+         "instructions": "One sentence with the number that matters."}
+    ],
+    "location": [[{"param": "post_type", "operator": "==", "value": "case_study"}]],
+    "menu_order": 0,
+    "position": "normal",
+    "active": true,
+    "modified": 1763222400
+}

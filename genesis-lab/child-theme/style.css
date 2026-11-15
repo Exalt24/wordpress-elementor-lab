@@ -1,0 +1,11 @@
+/*
+Theme Name:   Lab Child
+Description:  A Genesis child theme for the genesis-lab: a case study post type, Advanced Custom Fields from code and the hooks that shape the front page.
+Template:     genesis
+Version:      1.0.0
+Text Domain:  lab-child
+*/
+.case-card { border: 1px solid #d8dde3; border-radius: 6px; padding: 16px; margin: 0 0 16px; }
+.case-card h2 { margin: 0 0 8px; font-size: 22px; }
+.case-card .case-meta { color: #555; font-size: 14px; margin: 0 0 8px; }
+.case-card .case-result { font-weight: 600; }
