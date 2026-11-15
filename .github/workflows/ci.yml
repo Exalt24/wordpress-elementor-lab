@@ -34,7 +34,7 @@ jobs:
       - name: Deliberate breakage check
         run: python tests/mutation_check.py
       - name: Genesis lab, install the PSD libraries
-        run: pip install psd-tools pytoshop numpy
+        run: pip install psd-tools pytoshop numpy six
       - name: Genesis lab, PSD converter tests and mutation controls
         run: python genesis-lab/tests/test_psd_to_page.py
       - name: Genesis lab, file checks for both themes
