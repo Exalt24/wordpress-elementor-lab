@@ -30,6 +30,8 @@ services:
     volumes:
       - devdata:/var/www/html
       - ./child-theme:/var/www/html/wp-content/themes/lab-child
+      - ./classic-child:/var/www/html/wp-content/themes/lab-classic
+      - ./mu-plugins:/var/www/html/wp-content/mu-plugins
 
   prod:
     image: wordpress:6-apache
@@ -44,6 +46,8 @@ services:
     volumes:
       - proddata:/var/www/html
       - ./child-theme:/var/www/html/wp-content/themes/lab-child:ro
+      - ./classic-child:/var/www/html/wp-content/themes/lab-classic:ro
+      - ./mu-plugins:/var/www/html/wp-content/mu-plugins:ro
 
   cli-dev:
     image: wordpress:cli
@@ -56,6 +60,8 @@ services:
     volumes:
       - devdata:/var/www/html
       - ./child-theme:/var/www/html/wp-content/themes/lab-child
+      - ./classic-child:/var/www/html/wp-content/themes/lab-classic
+      - ./mu-plugins:/var/www/html/wp-content/mu-plugins
       - ./vendor:/vendor:ro
       - ./backups:/backups
     profiles: ["tools"]
@@ -71,6 +77,8 @@ services:
     volumes:
       - proddata:/var/www/html
       - ./child-theme:/var/www/html/wp-content/themes/lab-child:ro
+      - ./classic-child:/var/www/html/wp-content/themes/lab-classic:ro
+      - ./mu-plugins:/var/www/html/wp-content/mu-plugins:ro
       - ./vendor:/vendor:ro
       - ./backups:/backups
     profiles: ["tools"]

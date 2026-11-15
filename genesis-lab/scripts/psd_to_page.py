@@ -53,7 +53,7 @@ def build(path):
     out.append(".mock-photo{background:var(--mock-photo);min-height:%dpx;border-radius:6px}" % round(by["photo"]["h"] * 0.6))
     out.append("@media (max-width:700px){.mock-band{grid-template-columns:1fr;padding:32px 20px}}")
     out.append("</style>")
-    out.append('<section class="mock" data-band-share="%d"><div class="mock-band"><div class="mock-text">' % band_share)
+    out.append('<section class="mock alignfull" data-band-share="%d"><div class="mock-band"><div class="mock-text">' % band_share)
     for l in left:
         t = html.escape(l["text"])
         out.append({"headline": "<h1>%s</h1>", "sub": "<p>%s</p>", "cta": '<a href="/contact/">%s</a>'}[l["role"]] % t)

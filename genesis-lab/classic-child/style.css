@@ -1,0 +1,12 @@
+/*
+Theme Name:   Lab Classic
+Description:  A child theme of a plain classic parent: the same cards and credit line as Lab Child, placed with WordPress's own hooks.
+Template:     twentytwentyone
+Version:      1.0.0
+Text Domain:  lab-classic
+*/
+.case-card { border: 1px solid #d8dde3; border-radius: 6px; padding: 16px; margin: 0 0 16px; }
+.case-card h2 { margin: 0 0 8px; font-size: 22px; }
+.case-card .case-meta { color: #555; font-size: 14px; margin: 0 0 8px; }
+.case-card .case-result { font-weight: 600; }
+.lab-credit { text-align: center; color: #555; font-size: 14px; }
