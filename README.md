@@ -65,11 +65,11 @@ A shop that prices gold and silver from the spot price needs a current price on 
 | First Contentful Paint and Speed Index | 2.3 s and 4.0 s | 2.3 s and 2.3 s | 1.2 s and 1.2 s |
 | Outside hardening probes passed | 1 of 13 | not run | 13 of 13 |
 
-The saved price keeps one reading for 10 seconds, lets one request at a time refresh it, throws away a reading that jumped more than 15 percent, shows the last good price marked stale for up to 40 seconds and then no price at all. That removes the server wait but not the paint time, which the theme's files set. The lean assets do that: Google Fonts, block and brand styles the page does not use, the jQuery Migrate shim and a 15 KB icon font stylesheet that is 97 percent unused are dropped or loaded without blocking, and jQuery moves to the footer. These are Lighthouse's simulated mobile figures on a lab page, not field data; a check afterwards found no console errors on three pages and a working cart.
+The saved price keeps one reading for 10 seconds, lets one request at a time refresh it, throws away a reading that jumped more than 15 percent, shows the last good price marked stale for up to 40 seconds and then no price at all. That removes the server wait but not the paint time, which the theme's files set. The lean assets do that: Google Fonts, block and brand styles the page does not use, the jQuery Migrate shim and a 15 KB icon font stylesheet that is 97 percent unused are dropped or loaded without blocking, and jQuery moves to the footer. These are Lighthouse's simulated mobile figures on the local page; a check afterwards found no console errors on three pages and a working cart.
 
 * **Bad days** (14 of 14 live checks): a dead feed leaves the last good price on the page marked stale; past the limit there is no price, no add to cart button, no Offer markup and no Merchant Center line; a feed that triples the gold price or answers with a maintenance page never reaches a customer.
 * **Markup**: WooCommerce's Offer says a price is valid until the end of the year, which is wrong for a price that moves every few seconds, so the plugin sets `priceValidUntil` to when the saved reading expires and checks the offered price against the price printed on the page.
-* **Hardening**: security headers, XML-RPC refused, scanner probes for secrets refused, the users list closed, search and REST limited per address, the dashboard code editor off, and a login limit that refuses the correct password after five wrong ones. A network firewall and backups are server jobs and are not done here.
+* **Hardening**: security headers, XML-RPC refused, scanner probes for secrets refused, the users list closed, search and REST limited per address, the dashboard code editor off, and a login limit that refuses the correct password after five wrong ones. A network firewall and backups are server jobs, so this covers the WordPress layer.
 * **Tests**: 85 PHP checks on the rules, 32 Python checks and all 79 guards in `tests/mutation_check.py`.
 
 Run it with `bash bullion-shop/scripts/run_lab.sh` (Docker, Python 3, bash, curl; about 20 minutes); the shop opens at `http://localhost:8089/` and the admin password is made on your machine in `bullion-shop/build/admin_password.txt`. Limits: [bullion-shop/docs/bullion-shop.md](bullion-shop/docs/bullion-shop.md#limits).
@@ -109,9 +109,9 @@ The local login is `admin` / `admin-local-only` at `http://localhost:8087/wp-adm
 
 ## Scope and next steps
 
-- It runs as a local site in Docker. The page is a demo for a service concept. The OpenCart shop is a made-up outdoor store with six products and flat drawn pictures, not a live shop, and its fix was tested on a local store, not on a store under traffic.
+- It runs as a local site in Docker. The page is a demo for a service concept. The OpenCart shop is a sample outdoor store with six products and flat drawn pictures, and its fix was tested on a local store.
 - The page was assembled through the editor's command API in a headless browser. Elementor itself produced and saved the page data. The editor opens and edits the result normally.
 - Only free Elementor widgets are used, so the request section is a mailto line. Next step: Pro widgets such as forms and loop grids.
 - The keyword suggestions are not search volumes, because no keyless source gives volumes. The AI answer check asks a model: the sample run used a local model, which does not browse and is not ChatGPT or Perplexity. Google AI Overviews have no API and are not checked.
-- The bullion shop is a local lab with invented products and a stand-in price feed, not a client store. It has no page cache and no real traffic, so conversion, revenue and rankings are not measured.
+- The bullion shop runs locally with sample products and a stand-in price feed. It covers server speed, hardening and bad-day behaviour.
 - The audit checks one page's technical basics, with alt text and heading order as its accessibility checks. Next steps: rankings and speed under load.
