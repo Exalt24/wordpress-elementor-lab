@@ -1,0 +1,18 @@
+CAUGHT  enrolment check removed
+CAUGHT  hidden course check removed
+CAUGHT  lock flag ignored
+CAUGHT  any failed login reason counts
+CAUGHT  lockout window ignored
+CAUGHT  lockout code mixed up with the wrong password code
+CAUGHT  hidden activity check removed
+CAUGHT  future date never a cause
+CAUGHT  passed until date never a cause
+CAUGHT  nested values flattened wrongly
+CAUGHT  scripts counted as page text
+CAUGHT  student never enrolled   (live case A1)
+CAUGHT  course made hidden instead of visible   (live case A2)
+CAUGHT  lockout read instead of cleared   (live case B)
+CAUGHT  restriction moved to tomorrow   (live case C1)
+CAUGHT  activity hidden instead of shown   (live case C2)
+
+16 of 16 breaks caught

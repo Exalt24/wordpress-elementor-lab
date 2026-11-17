@@ -1,0 +1,80 @@
+[lab] start: http://localhost:8093, run a90e
+[A1] reproduce: student logs in, My courses lists 0 course(s); 'Harbour Skills A1A90E' is not among them
+[A1] screenshot: saved moodle-lab/docs/cases/a1_before.png at http://localhost:8093/my/courses.php
+[A1] diagnose: course visible=1, enrolled users 1 (the teacher only) -> NOT_ENROLLED
+[A1] fix: enrol_manual_enrol_users, role student
+[A1] verify: student's My courses now lists ['Harbour Skills A1A90E']
+[A1] screenshot: saved moodle-lab/docs/cases/a1_after.png at http://localhost:8093/my/courses.php
+[A2] reproduce: student is enrolled but My courses lists []
+[A2] screenshot: saved moodle-lab/docs/cases/a2_before.png at http://localhost:8093/my/courses.php
+[A2] diagnose: student is in the enrolled users, course visible=0 -> COURSE_HIDDEN
+[A2] fix: core_course_update_courses visible=1
+[A2] verify: student's My courses now lists ['Harbour Skills A2A90E']
+[A2] screenshot: saved moodle-lab/docs/cases/a2_after.png at http://localhost:8093/my/courses.php
+[B] reproduce: 3 wrong passwords, then the CORRECT password: login accepted=False, the login page says: Your account is locked. An unlock link has been sent via email.
+[B] screenshot: saved moodle-lab/docs/cases/b_before.png at http://localhost:8093/login/index.php
+[B] diagnose: login_lockout=True, failed login log reasons (newest first) [4, 4, 3, 3, 3], threshold 3 -> LOCKED_OUT
+[B] fix: unlock the account (login_unlock_account), locked now False
+[B] verify: correct password accepted=True, My courses ['Harbour Skills BA90E']
+[B] screenshot: saved moodle-lab/docs/cases/b_after.png at http://localhost:8093/my/courses.php
+[C1] reproduce: student opens the assignment: submission page shown=False; Moodle sends the student to the course page with: Available from 17 November 2027, 6:31 PM 
+[C1] screenshot: saved moodle-lab/docs/cases/c1_before.png at http://localhost:8093/course/view.php?id=48
+[C1] diagnose: activity visible, Restrict access holds a date condition 'from' 17 November 2027 -> DATE_NOT_REACHED
+[C1] fix: the Restrict access date moved to yesterday
+[C1] verify: student opens it again: submission page shown=True
+[C1] screenshot: saved moodle-lab/docs/cases/c1_after.png at http://localhost:8093/mod/assign/view.php?id=62
+[C2] reproduce: student opens the assignment: submission page shown=False; Moodle sends the student to the course page with: Sorry, this activity is currently hidden 
+[C2] screenshot: saved moodle-lab/docs/cases/c2_before.png at http://localhost:8093/course/view.php?id=49
+[C2] diagnose: teacher view of the course: activity visible=0 -> HIDDEN
+[C2] fix: core_course_edit_module action=show
+[C2] verify: student opens it again: submission page shown=True
+[C2] screenshot: saved moodle-lab/docs/cases/c2_after.png at http://localhost:8093/mod/assign/view.php?id=64
+
+{
+ "run_not_enrolled": {
+  "before": [],
+  "cause": "NOT_ENROLLED",
+  "after": [
+   "Harbour Skills A1A90E"
+  ],
+  "course": "Harbour Skills A1A90E"
+ },
+ "run_hidden_course": {
+  "before": [],
+  "cause": "COURSE_HIDDEN",
+  "after": [
+   "Harbour Skills A2A90E"
+  ],
+  "course": "Harbour Skills A2A90E"
+ },
+ "run_lockout": {
+  "wrong_accepted": [
+   false,
+   false,
+   false
+  ],
+  "correct_before": false,
+  "message": "Your account is locked. An unlock link has been sent via email.",
+  "cause": "LOCKED_OUT",
+  "reasons": [
+   4,
+   4,
+   3,
+   3,
+   3
+  ],
+  "correct_after": true
+ },
+ "run_restricted_assignment": {
+  "seen_before": false,
+  "cause": "DATE_NOT_REACHED",
+  "seen_after": true,
+  "cmid": 62
+ },
+ "run_hidden_assignment": {
+  "seen_before": false,
+  "cause": "HIDDEN",
+  "seen_after": true,
+  "cmid": 64
+ }
+}

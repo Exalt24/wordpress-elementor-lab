@@ -1,0 +1,47 @@
+name: moodlelab
+services:
+  db:
+    image: bitnamilegacy/mariadb:11.8.3
+    environment:
+      MARIADB_USER: moodle
+      MARIADB_DATABASE: moodle
+      MARIADB_PASSWORD: ${LAB_DB_PW:?run scripts/setup.sh, it makes build/.env}
+      MARIADB_ROOT_PASSWORD: ${LAB_DB_ROOT_PW:?run scripts/setup.sh, it makes build/.env}
+      MARIADB_CHARACTER_SET: utf8mb4
+      MARIADB_COLLATE: utf8mb4_unicode_ci
+    volumes:
+      - dbdata:/bitnami/mariadb
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb-admin ping -h 127.0.0.1 -uroot -p$$MARIADB_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  moodle:
+    image: bitnamilegacy/moodle:5.0.2
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8093:8080"
+    environment:
+      MOODLE_DATABASE_TYPE: mariadb
+      MOODLE_DATABASE_HOST: db
+      MOODLE_DATABASE_PORT_NUMBER: "3306"
+      MOODLE_DATABASE_USER: moodle
+      MOODLE_DATABASE_NAME: moodle
+      MOODLE_DATABASE_PASSWORD: ${LAB_DB_PW:?run scripts/setup.sh, it makes build/.env}
+      MOODLE_USERNAME: admin
+      MOODLE_PASSWORD: ${LAB_ADMIN_PW:?run scripts/setup.sh, it makes build/.env}
+      MOODLE_EMAIL: lab@example.com
+      MOODLE_SITE_NAME: Harbour Lab LMS
+      MOODLE_HOST: localhost:8093
+    volumes:
+      - moodledata:/bitnami/moodle
+      - moodledatafiles:/bitnami/moodledata
+      - ./scripts/lab.php:/lab/lab.php:ro
+
+volumes:
+  dbdata:
+  moodledata:
+  moodledatafiles:

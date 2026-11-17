@@ -51,3 +51,11 @@ jobs:
         run: |
           node --check genesis-lab/mu-plugins/lab-core-assets/cases-filter.js
           node --check genesis-lab/scripts/check_filter.cjs
+      - name: Moodle lab, offline tests (the live cases need the container and are skipped here)
+        run: python moodle-lab/tests/test_moodle_cases.py offline
+      - name: Moodle lab, deliberate breakage check on the diagnosis code
+        run: python moodle-lab/tests/mutation_check.py
+      - name: Moodle lab, PHP syntax and browser driver syntax
+        run: |
+          php -l moodle-lab/scripts/lab.php
+          node --check moodle-lab/scripts/student_shot.cjs

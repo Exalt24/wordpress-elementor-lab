@@ -1,0 +1,76 @@
+PASS  A: a student missing from the enrolled users is NOT_ENROLLED
+PASS  A: an enrolled student in a hidden course is COURSE_HIDDEN
+PASS  A: not enrolled outranks hidden, the enrolment is fixed first
+PASS  A: enrolled in a visible course is NO_CAUSE_FOUND
+PASS  B: the lock flag set is LOCKED_OUT
+PASS  B: recent wrong passwords with no lock are WRONG_PASSWORDS_BELOW_LIMIT
+PASS  B: a wrong password older than the window does not count
+PASS  B: a refusal because of the lock is not a wrong password
+PASS  B: no failed logins logged is NO_FAILED_LOGINS_LOGGED
+PASS  C: a hidden activity is HIDDEN
+PASS  C: a hidden activity with a date is still HIDDEN first
+PASS  C: a date in the future is DATE_NOT_REACHED with that date
+PASS  C: a 'from' date already passed is not a cause
+PASS  C: an 'until' date that passed is DATE_PASSED
+PASS  C: a visible activity with no restriction is NO_CAUSE_FOUND
+PASS  client: nested values use Moodle's users[0][username] encoding
+PASS  client: page_text drops tags, scripts and styles
+[A1] reproduce: student logs in, My courses lists 0 course(s); 'Harbour Skills A1558A' is not among them
+[A1] diagnose: course visible=1, enrolled users 1 (the teacher only) -> NOT_ENROLLED
+[A1] fix: enrol_manual_enrol_users, role student
+[A1] verify: student's My courses now lists ['Harbour Skills A1558A']
+PASS  A1: before the fix the course is not on the student's My courses
+PASS  A1: diagnosed as NOT_ENROLLED
+PASS  A1: after the fix the student's My courses lists the course
+      [A1] reproduce: student logs in, My courses lists 0 course(s); 'Harbour Skills A1558A' is not among them
+      [A1] diagnose: course visible=1, enrolled users 1 (the teacher only) -> NOT_ENROLLED
+      [A1] fix: enrol_manual_enrol_users, role student
+      [A1] verify: student's My courses now lists ['Harbour Skills A1558A']
+[A2] reproduce: student is enrolled but My courses lists []
+[A2] diagnose: student is in the enrolled users, course visible=0 -> COURSE_HIDDEN
+[A2] fix: core_course_update_courses visible=1
+[A2] verify: student's My courses now lists ['Harbour Skills A2FBE5']
+PASS  A2: an enrolled student does not see a hidden course
+PASS  A2: diagnosed as COURSE_HIDDEN
+PASS  A2: after the fix the student's My courses lists the course
+      [A2] reproduce: student is enrolled but My courses lists []
+      [A2] diagnose: student is in the enrolled users, course visible=0 -> COURSE_HIDDEN
+      [A2] fix: core_course_update_courses visible=1
+      [A2] verify: student's My courses now lists ['Harbour Skills A2FBE5']
+[B] reproduce: 3 wrong passwords, then the CORRECT password: login accepted=False, the login page says: Your account is locked. An unlock link has been sent via email.
+[B] diagnose: login_lockout=True, failed login log reasons (newest first) [4, 3, 3, 3], threshold 3 -> LOCKED_OUT
+[B] fix: unlock the account (login_unlock_account), locked now False
+[B] verify: correct password accepted=True, My courses ['Harbour Skills BC318']
+PASS  B: three wrong passwords were all refused
+PASS  B: the CORRECT password is refused while the account is locked
+PASS  B: diagnosed as LOCKED_OUT from the lockout status
+PASS  B: Moodle logged the failed attempts with the wrong password code
+PASS  B: after the unlock the correct password is accepted
+      [B] reproduce: 3 wrong passwords, then the CORRECT password: login accepted=False, the login page says: Your account is locked. An unlock link has been sent via email.
+      [B] diagnose: login_lockout=True, failed login log reasons (newest first) [4, 3, 3, 3], threshold 3 -> LOCKED_OUT
+      [B] fix: unlock the account (login_unlock_account), locked now False
+      [B] verify: correct password accepted=True, My courses ['Harbour Skills BC318']
+[C1] reproduce: student opens the assignment: submission page shown=False; Moodle sends the student to the course page with: Available from 17 November 2027, 6:30 PM 
+[C1] diagnose: activity visible, Restrict access holds a date condition 'from' 17 November 2027 -> DATE_NOT_REACHED
+[C1] fix: the Restrict access date moved to yesterday
+[C1] verify: student opens it again: submission page shown=True
+PASS  C1: before the fix the student does not get the submission page
+PASS  C1: diagnosed as DATE_NOT_REACHED
+PASS  C1: after the fix the student gets the submission page
+      [C1] reproduce: student opens the assignment: submission page shown=False; Moodle sends the student to the course page with: Available from 17 November 2027, 6:30 PM 
+      [C1] diagnose: activity visible, Restrict access holds a date condition 'from' 17 November 2027 -> DATE_NOT_REACHED
+      [C1] fix: the Restrict access date moved to yesterday
+      [C1] verify: student opens it again: submission page shown=True
+[C2] reproduce: student opens the assignment: submission page shown=False; Moodle sends the student to the course page with: Sorry, this activity is currently hidden 
+[C2] diagnose: teacher view of the course: activity visible=0 -> HIDDEN
+[C2] fix: core_course_edit_module action=show
+[C2] verify: student opens it again: submission page shown=True
+PASS  C2: before the fix the student does not get the submission page
+PASS  C2: diagnosed as HIDDEN
+PASS  C2: after the fix the student gets the submission page
+      [C2] reproduce: student opens the assignment: submission page shown=False; Moodle sends the student to the course page with: Sorry, this activity is currently hidden 
+      [C2] diagnose: teacher view of the course: activity visible=0 -> HIDDEN
+      [C2] fix: core_course_edit_module action=show
+      [C2] verify: student opens it again: submission page shown=True
+
+all passed
