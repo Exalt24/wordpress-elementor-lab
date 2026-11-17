@@ -1,4 +1,4 @@
-FROM node:22-slim
+FROM node:25-slim
 
 # Lighthouse in its own container, so the measurement does not open a browser on the machine it runs on.
 RUN apt-get update \
