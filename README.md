@@ -79,13 +79,13 @@ Run it with `bash bullion-shop/scripts/run_lab.sh` (Docker, Python 3, bash, curl
 
 | Ticket | What the student saw | What the admin found | Fix |
 |---|---|---|---|
-| Cannot see the course | My courses empty | Student not in the enrolled users | Enrol as Student |
+| Cannot see the course | My courses empty | Student missing from the course roster | Enrol as Student |
 | Cannot see the course | Enrolled, My courses empty | Course visibility set to Hide | Show the course |
 | Locked out | The correct password refused | Lockout flag set; the log shows 3 wrong passwords, then refusals with the lockout code | Unlock the account |
 | Assignment unavailable | Sent to the course page, "Available from" a year away | Restrict access date typed with the wrong year | Move the date to yesterday |
 | Assignment unavailable | Sent to the course page, "currently hidden" | Activity visibility set to Hide | Show the activity |
 
-17 offline checks on the diagnosis code, 17 live checks against the container and 16 deliberate breaks that each turn a test red. Run it with `bash moodle-lab/scripts/setup.sh` (Docker, Python 3, bash, curl; about five minutes), then `python moodle-lab/scripts/cases.py --shots`. What was hard, the screenshots and the limits (a local Moodle on invented data, no Blackboard, Canvas or D2L, no SSO or LTI) are in [moodle-lab/docs/moodle-support-cases.md](moodle-lab/docs/moodle-support-cases.md).
+17 offline checks on the diagnosis code, 17 live checks against the container and 16 deliberate breaks that each turn a test red. Run it with `bash moodle-lab/scripts/setup.sh` (Docker, Python 3, bash, curl; about five minutes), then `python moodle-lab/scripts/cases.py --shots`. What was hard, the screenshots and the limits (built and tested against a local Moodle with seeded course data; Blackboard, Canvas, D2L, SSO and LTI are separate platforms) are in [moodle-lab/docs/moodle-support-cases.md](moodle-lab/docs/moodle-support-cases.md).
 
 ## What the keyword and AI scripts found
 
