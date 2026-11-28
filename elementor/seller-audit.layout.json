@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "page": {
+    "title": "Amazon seller account audit (generated)",
+    "slug": "seller-audit-generated",
+    "excerpt": "A free written audit of your Amazon listings, advertising spend and account health, with the three changes most likely to lift sales ranked first."
+  },
+  "sections": [
+    {
+      "anchor": "top", "background": "ink", "padding": "section", "gap": "sm",
+      "blocks": [
+        {"widget": "heading", "text": "Find out why your Amazon listings are not converting", "level": "h1", "align": "center", "color": "white", "size": "h1", "weight": "black", "line_height": "tight"},
+        {"widget": "text", "text": "A free, written audit of your listings, your advertising spend and your account health, with the three changes most likely to lift sales first.", "align": "center", "color": "light_text", "size": "body_lg"},
+        {"widget": "button", "text": "Request the free audit", "url": "#request", "align": "center", "background": "accent", "color": "white", "size": "button", "weight": "bold", "radius": "button", "padding": "button"}
+      ]
+    },
+    {
+      "background": "white", "padding": "section", "gap": "lg",
+      "blocks": [
+        {"widget": "heading", "text": "What the audit checks", "align": "center", "color": "ink"},
+        {"widget": "columns", "gap": "md", "columns": [
+          {"width": 30, "background": "soft", "gap": "xs", "blocks": [
+            {"widget": "heading", "text": "Listing quality", "level": "h3", "color": "ink"},
+            {"widget": "text", "text": "Titles, bullet points, images and A+ content compared against the top results for the same search terms.", "color": "muted"}]},
+          {"width": 30, "background": "soft", "gap": "xs", "blocks": [
+            {"widget": "heading", "text": "Advertising spend", "level": "h3", "color": "ink"},
+            {"widget": "text", "text": "Campaigns spending without selling, overlapping keywords and the search terms that never convert.", "color": "muted"}]},
+          {"width": 30, "background": "soft", "gap": "xs", "blocks": [
+            {"widget": "heading", "text": "Account health", "level": "h3", "color": "ink"},
+            {"widget": "text", "text": "Policy warnings, inventory limits and the complaints that quietly cap your visibility.", "color": "muted"}]}
+        ]}
+      ]
+    },
+    {
+      "background": "soft", "padding": "section", "gap": "md",
+      "blocks": [
+        {"widget": "heading", "text": "How it works", "align": "center", "color": "ink"},
+        {"widget": "icon_list", "color": "ink", "icon_color": "accent", "items": [
+          "Send your seller account email and one product link",
+          "We review the three areas above, read-only, within three working days",
+          "You get a written report with the top three changes ranked by likely lift"]}
+      ]
+    },
+    {
+      "anchor": "request", "background": "ink", "padding": "section", "gap": "sm",
+      "blocks": [
+        {"widget": "heading", "text": "Request the free audit", "align": "center", "color": "white"},
+        {"widget": "text", "html": "<p>Email <a href=\"mailto:audit@example.com\">audit@example.com</a> with your seller account name and one product link.</p>", "align": "center", "color": "light_text"}
+      ]
+    },
+    {
+      "background": "night", "padding": "strip", "inner": false,
+      "blocks": [
+        {"widget": "text", "text": "Demo page built to practise an Elementor build. Not a live service.", "align": "center", "color": "dim_text"}
+      ]
+    }
+  ]
+}

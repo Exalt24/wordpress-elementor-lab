@@ -31,6 +31,18 @@ jobs:
         run: php bullion-shop/tests/test_logic.php
       - name: Bullion shop, script tests
         run: python bullion-shop/tests/test_scripts.py
+      - name: Elementor manifest builder tests
+        run: python tests/test_manifest_to_elementor.py
+      - name: Elementor editor comparison tests
+        run: node tests/test_editor_compare.cjs
+      - name: Elementor draft route, PHP syntax and tree check tests
+        run: |
+          php -l wp/mu-plugins/elementor-draft-route.php
+          php tests/test_elementor_route.php
+      - name: Elementor browser script syntax
+        run: |
+          node --check scripts/verify_in_editor.cjs
+          node --check scripts/editor_compare.cjs
       - name: Deliberate breakage check
         run: python tests/mutation_check.py
       - name: Genesis lab, install the PSD libraries

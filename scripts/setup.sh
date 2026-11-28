@@ -24,3 +24,9 @@ wp post meta update "$ID" _elementor_edit_mode builder
 wp post meta update "$ID" _wp_page_template elementor_canvas
 echo "$ID" > .page_id
 echo "page id $ID written to .page_id"
+
+# The manifest pipeline (scripts/elementor_draft.py) calls the lab/v1 route with an application password, which WordPress only offers over plain
+# http when the site says it is a local environment.
+wp config set WP_ENVIRONMENT_TYPE local --type=constant
+wp user application-password create admin lab-pipeline --porcelain | tail -1 > .lab_app_password
+echo "application password for scripts/elementor_draft.py written to .lab_app_password"

@@ -10,7 +10,7 @@ The audit found three things missing. A small must-use plugin fixes them, and a 
 
 The same audit then ran on a stock OpenCart 4 store (PHP) with a small sample catalogue. A fresh OpenCart scores 8, 10 and 10 of 15 on its home, category and product pages, and an extension plus a few settings take all three to 15 of 15. See [What the OpenCart store shows](#what-the-opencart-store-shows).
 
-A WooCommerce shop in [`bullion-shop/`](bullion-shop/docs/bullion-shop.md) prices twelve invented gold and silver products live from a stand-in metals feed. One saved price reading instead of a feed call per product cut the shop page's server response from 1969 ms to 233 ms, and trimming the render blocking files took the mobile Lighthouse score from 91 to 98. It also has a spot price shortcode, Product, Organization and FAQ markup, a Merchant Center feed and hardening.
+A WooCommerce shop in [`bullion-shop/`](bullion-shop/docs/bullion-shop.md) prices twelve invented gold and silver products live from a stand-in metals feed. One saved price reading instead of a feed call per product cut the shop page's server response from 1969 ms to 233 ms.
 
 ## What is in it
 
@@ -18,6 +18,7 @@ A WooCommerce shop in [`bullion-shop/`](bullion-shop/docs/bullion-shop.md) price
 |---|---|
 | `docker-compose.yml`, `scripts/setup.sh` | WordPress 6 and MariaDB in Docker, WP-CLI install, the free Elementor plugin (4.3.3 when I built it; `setup.sh` installs whatever version is current) and the Hello Elementor theme |
 | `scripts/build_page.cjs` | Opens the Elementor editor in a headless browser and builds the page with the editor's own command API (`$e.run('document/elements/create')`), then saves with the editor's publish command. Five sections: hero, three audit cards, how it works, request, footer note. Free widgets only |
+| `elementor/`, `scripts/elementor_draft.py`, `scripts/manifest_to_elementor.py`, `wp/mu-plugins/elementor-draft-route.php` | A layout manifest of design token names becomes Elementor's element tree, is saved as a draft through a small REST route and read back in the real editor: [docs/elementor-manifest.md](docs/elementor-manifest.md) |
 | `scripts/seo_audit.py` | A 15-check technical SEO audit: status and redirects, title and meta description length, one h1, heading order, image alt text, canonical, language, viewport, Open Graph, valid JSON-LD, broken links, response time, page weight. Standard library only |
 | `wp/mu-plugins/seo-basics.php` | The fix for what the audit found: meta description from the page excerpt, Open Graph tags and a Service JSON-LD block |
 | `tests/test_seo_audit.py` | Ten offline tests: a clean page passes everything, eight pages with exactly one defect each fail exactly that check, and a relative link is checked against the page's `<base href>` (the OpenCart crawl showed the audit was getting that wrong) |
@@ -54,38 +55,21 @@ What changed, and where (settings and data, crawl and index, structured data, he
 
 ## What the bullion shop shows
 
-A shop that prices gold and silver from the spot price needs a current price on every page view, and the price must never be wrong. `bullion-shop/` builds that on WooCommerce against a stand-in feed with invented prices and measures three states of the same shop.
+A shop that prices gold and silver from the spot price needs a current price on every page view, and the price must never be wrong. `bullion-shop/` builds that on WooCommerce against a stand-in feed with invented prices and measures the same shop before, with one saved price reading, and with the render blocking files trimmed.
 
-| Shop page, same laptop, same feed | Before | Saved price | Saved price, lean assets |
-|---|---|---|---|
-| Feed calls in 6 page loads | 72 | 0 | 0 |
-| Time to first byte (median of 6) | 1.92 s | 0.07 s | 0.06 s |
-| Lighthouse mobile server response (median of 3) | 1969 ms | 233 ms | 245 ms |
-| Lighthouse mobile performance score (3 runs) | 89, 88, 89 | 91, 91, 91 | 99, 98, 98 |
-| Largest Contentful Paint (median of 3) | 3.2 s | 3.2 s | 2.3 s |
-| First Contentful Paint and Speed Index | 2.3 s and 4.0 s | 2.3 s and 2.3 s | 1.2 s and 1.2 s |
-| Outside hardening probes passed | 1 of 13 | not run | 13 of 13 |
-
-The saved price keeps one reading for 10 seconds, lets one request at a time refresh it, throws away a reading that jumped more than 15 percent, shows the last good price marked stale for up to 40 seconds and then no price at all. That removes the server wait but not the paint time, which the theme's files set. The lean assets do that: Google Fonts, block and brand styles the page does not use, the jQuery Migrate shim and a 15 KB icon font stylesheet that is 97 percent unused are dropped or loaded without blocking, and jQuery moves to the footer. These are Lighthouse's simulated mobile figures on the local page; a check afterwards found no console errors on three pages and a working cart.
-
-* **Bad days, markup and hardening**: 14 of 14 live checks on a dead or wild feed, an Offer that no longer claims a price is valid until the end of the year, and a WordPress layer hardening list. The detail is in [bullion-shop/docs/bullion-shop.md](bullion-shop/docs/bullion-shop.md).
-* **Tests**: 85 PHP checks on the rules, 32 Python checks and all 79 guards in `tests/mutation_check.py`.
-
-Run it with `bash bullion-shop/scripts/run_lab.sh` (Docker, Python 3, bash, curl; about 20 minutes); the shop opens at `http://localhost:8089/` and the admin password is made on your machine in `bullion-shop/build/admin_password.txt`. Limits: [bullion-shop/docs/bullion-shop.md](bullion-shop/docs/bullion-shop.md#limits).
+Six page loads made 72 feed calls before and 0 with the saved price. Time to first byte went from 1.92 s to 0.07 s and the mobile Lighthouse score from 89 to 98 with the lean assets. The tables, the 13 outside hardening probes (1 of 13 before, 13 of 13 after) and the 14 live checks on a dead or wild feed are in [bullion-shop/docs/bullion-shop.md](bullion-shop/docs/bullion-shop.md). Tests: 85 PHP checks, 32 Python checks and all the guards in `tests/mutation_check.py`. Run it with `bash bullion-shop/scripts/run_lab.sh` (Docker, Python 3, bash, curl; about 20 minutes); the admin password is made on your machine in `bullion-shop/build/admin_password.txt`.
 
 ## What the Moodle lab shows
 
-`moodle-lab/` runs Moodle 5.0 locally, makes the people and the course through its web service API, breaks one thing per ticket and fixes it the way an admin would, then logs in as the student to check.
-
-| Ticket | What the student saw | What the admin found | Fix |
-|---|---|---|---|
-| Cannot see the course | My courses empty | Student missing from the course roster | Enrol as Student |
-| Cannot see the course | Enrolled, My courses empty | Course visibility set to Hide | Show the course |
-| Locked out | The correct password refused | Lockout flag set; the log shows 3 wrong passwords, then refusals with the lockout code | Unlock the account |
-| Assignment unavailable | Sent to the course page, "Available from" a year away | Restrict access date typed with the wrong year | Move the date to yesterday |
-| Assignment unavailable | Sent to the course page, "currently hidden" | Activity visibility set to Hide | Show the activity |
+`moodle-lab/` runs Moodle 5.0 locally, makes the people and the course through its web service API, breaks one thing per ticket and fixes it the way an admin would, then logs in as the student to check. The five tickets are a student missing from the roster, a course set to Hide, a lockout flag (the log shows 3 wrong passwords, then refusals with the lockout code), a restrict access date typed with the wrong year and an activity set to Hide.
 
 17 offline checks on the diagnosis code, 17 live checks against the container and 16 deliberate breaks that each turn a test red. Run it with `bash moodle-lab/scripts/setup.sh` (Docker, Python 3, bash, curl; about five minutes), then `python moodle-lab/scripts/cases.py --shots`. What was hard, the screenshots and the limits (built and tested against a local Moodle with seeded course data; Blackboard, Canvas, D2L, SSO and LTI are separate platforms) are in [moodle-lab/docs/moodle-support-cases.md](moodle-lab/docs/moodle-support-cases.md).
+
+## What the manifest builder shows
+
+`elementor/seller-audit.layout.json` describes the landing page in 5 sections and 28 elements with design token names only. `python scripts/elementor_draft.py push elementor/seller-audit.layout.json` builds it, saves a draft and reads it back in the editor: the editor held all 28 elements with every sent setting, and `--promote` published it.
+
+Two broken trees were caught the same way. A widget type the editor does not have, and two elements sharing an id, were each dropped by the editor without a message (3 elements sent, 2 held), so the draft was deleted. A manifest with `#ff0000` instead of a colour name was refused before any request. The builder's output equals what Elementor 4.4.2 exported for the same page apart from the ids and the HTML the editor rewrites. Tests: 35 builder tests, 22 comparison checks, 46 PHP checks, 25 live checks and 46 more guards in `tests/mutation_check.py`. They found three defects, fixed and listed in [docs/elementor-manifest.md](docs/elementor-manifest.md) with the limits.
 
 ## What the keyword and AI scripts found
 
@@ -116,11 +100,20 @@ python scripts/ai_visibility.py --questions tests/fixtures/questions.txt --entit
 python tests/test_keyword_research.py && python tests/test_ai_visibility.py && python tests/mutation_check.py
 ```
 
+The manifest builder and its tests need only Python 3; the draft and editor check also need the running lab and Playwright.
+
+```
+python scripts/manifest_to_elementor.py elementor/seller-audit.layout.json
+python scripts/elementor_draft.py push elementor/seller-audit.layout.json
+python tests/test_manifest_to_elementor.py && node tests/test_editor_compare.cjs && php tests/test_elementor_route.php
+python tests/live_elementor_pipeline.py
+```
+
 The local login is `admin` / `admin-local-only` at `http://localhost:8087/wp-admin`, a site that `scripts/setup.sh` creates.
 
 ## Scope and next steps
 
 - It runs as a local site in Docker. The page is a demo for a service concept, the OpenCart shop is a sample outdoor store with six products, and the bullion shop uses sample products and a stand-in price feed.
-- The page was assembled through the editor's command API in a headless browser, and Elementor itself produced and saved the page data. Only free widgets are used, so the request section is a mailto line. Next: Pro widgets such as forms.
+- The page was assembled through the editor's command API in a headless browser, and Elementor itself produced and saved the page data. The manifest route writes the same data directly and relies on the editor read back to prove it opens. Only free widgets are used, so the request section is a mailto line. Next: Pro widgets such as forms.
 - The keyword suggestions are not search volumes, because no keyless source gives volumes. The AI answer check asks a local model, which does not browse and is not ChatGPT or Perplexity; Google AI Overviews have no API and are not checked.
 - The audit checks one page's technical basics, with alt text and heading order as its accessibility checks. Next steps: rankings and speed under load.

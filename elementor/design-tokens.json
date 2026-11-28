@@ -1,0 +1,20 @@
+{
+  "locked": true,
+  "color": {
+    "ink": "#16243a",
+    "accent": "#e8590c",
+    "soft": "#f4f6fa",
+    "muted": "#51607a",
+    "white": "#ffffff",
+    "night": "#0e1828",
+    "light_text": "#d6deee",
+    "dim_text": "#8fa0bd"
+  },
+  "gap": {"xs": 10, "sm": 18, "md": 24, "lg": 28},
+  "padding": {"section": [72, 24], "strip": [24, 24], "card": [28, 28], "button": [16, 32]},
+  "font_size": {"body_lg": 20, "button": 18, "h1": 52},
+  "font_weight": {"bold": "700", "black": "800"},
+  "line_height": {"tight": 1.1},
+  "radius": {"button": 8, "card": 12},
+  "content_width": 1100
+}

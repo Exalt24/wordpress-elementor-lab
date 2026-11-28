@@ -2,3 +2,4 @@
 node_modules/
 __pycache__/
 shots/
+.lab_app_password

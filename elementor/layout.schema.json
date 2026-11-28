@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Elementor layout manifest",
+  "description": "What a model may return: names of design tokens, never a raw colour or size. A builder turns it into the Elementor element tree.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "page", "sections"],
+  "properties": {
+    "version": {"const": 1},
+    "page": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "slug"],
+      "properties": {
+        "title": {"type": "string", "minLength": 1, "maxLength": 120},
+        "slug": {"type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "maxLength": 80},
+        "excerpt": {"type": "string", "maxLength": 300}
+      }
+    },
+    "sections": {"type": "array", "minItems": 1, "maxItems": 20, "items": {"$ref": "#/$defs/section"}}
+  },
+  "$defs": {
+    "token": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,23}$"},
+    "align": {"enum": ["left", "center", "right"]},
+    "section": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["background", "padding", "blocks"],
+      "properties": {
+        "anchor": {"type": "string", "pattern": "^[a-z][a-z0-9-]{0,31}$"},
+        "background": {"$ref": "#/$defs/token"},
+        "padding": {"$ref": "#/$defs/token"},
+        "gap": {"$ref": "#/$defs/token"},
+        "inner": {"type": "boolean"},
+        "blocks": {"type": "array", "minItems": 1, "maxItems": 30, "items": {"$ref": "#/$defs/block"}}
+      }
+    },
+    "block": {
+      "oneOf": [
+        {"$ref": "#/$defs/heading"},
+        {"$ref": "#/$defs/text"},
+        {"$ref": "#/$defs/button"},
+        {"$ref": "#/$defs/icon_list"},
+        {"$ref": "#/$defs/columns"}
+      ]
+    },
+    "heading": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["widget", "text"],
+      "properties": {
+        "widget": {"const": "heading"},
+        "text": {"type": "string", "minLength": 1, "maxLength": 160},
+        "level": {"enum": ["h1", "h2", "h3", "h4"]},
+        "align": {"$ref": "#/$defs/align"},
+        "color": {"$ref": "#/$defs/token"},
+        "size": {"$ref": "#/$defs/token"},
+        "weight": {"$ref": "#/$defs/token"},
+        "line_height": {"$ref": "#/$defs/token"}
+      }
+    },
+    "text": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["widget"],
+      "properties": {
+        "widget": {"const": "text"},
+        "text": {"type": "string", "minLength": 1, "maxLength": 1200},
+        "html": {"type": "string", "minLength": 1, "maxLength": 2400},
+        "align": {"$ref": "#/$defs/align"},
+        "color": {"$ref": "#/$defs/token"},
+        "size": {"$ref": "#/$defs/token"}
+      }
+    },
+    "button": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["widget", "text", "url"],
+      "properties": {
+        "widget": {"const": "button"},
+        "text": {"type": "string", "minLength": 1, "maxLength": 60},
+        "url": {"type": "string", "minLength": 1, "maxLength": 300},
+        "align": {"$ref": "#/$defs/align"},
+        "background": {"$ref": "#/$defs/token"},
+        "color": {"$ref": "#/$defs/token"},
+        "size": {"$ref": "#/$defs/token"},
+        "weight": {"$ref": "#/$defs/token"},
+        "radius": {"$ref": "#/$defs/token"},
+        "padding": {"$ref": "#/$defs/token"}
+      }
+    },
+    "icon_list": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["widget", "items"],
+      "properties": {
+        "widget": {"const": "icon_list"},
+        "items": {"type": "array", "minItems": 1, "maxItems": 12, "items": {"type": "string", "minLength": 1, "maxLength": 200}},
+        "color": {"$ref": "#/$defs/token"},
+        "icon_color": {"$ref": "#/$defs/token"}
+      }
+    },
+    "columns": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["widget", "columns"],
+      "properties": {
+        "widget": {"const": "columns"},
+        "gap": {"$ref": "#/$defs/token"},
+        "columns": {"type": "array", "minItems": 2, "maxItems": 4, "items": {"$ref": "#/$defs/column"}}
+      }
+    },
+    "column": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "blocks"],
+      "properties": {
+        "width": {"type": "integer", "minimum": 10, "maximum": 100},
+        "background": {"$ref": "#/$defs/token"},
+        "gap": {"$ref": "#/$defs/token"},
+        "blocks": {"type": "array", "minItems": 1, "maxItems": 10, "items": {"oneOf": [{"$ref": "#/$defs/heading"}, {"$ref": "#/$defs/text"}, {"$ref": "#/$defs/button"}, {"$ref": "#/$defs/icon_list"}]}}
+      }
+    }
+  }
+}

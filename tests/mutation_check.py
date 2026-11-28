@@ -13,8 +13,10 @@ import sys
 import tempfile
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-TESTS = ["tests/test_keyword_research.py", "tests/test_ai_visibility.py", "tests/test_seo_audit.py", "bullion-shop/tests/test_scripts.py"]
-PHP_TESTS = ["opencart/tests/test_markup.php", "bullion-shop/tests/test_logic.php"]
+TESTS = ["tests/test_keyword_research.py", "tests/test_ai_visibility.py", "tests/test_seo_audit.py", "tests/test_manifest_to_elementor.py", "bullion-shop/tests/test_scripts.py"]
+PHP_TESTS = ["opencart/tests/test_markup.php", "bullion-shop/tests/test_logic.php", "tests/test_elementor_route.php"]
+NODE_TESTS = ["tests/test_editor_compare.cjs"]
+BU, EC, RT = "scripts/manifest_to_elementor.py", "scripts/editor_compare.cjs", "wp/mu-plugins/elementor-draft-route.php"
 KR, AV, SA = "scripts/keyword_research.py", "scripts/ai_visibility.py", "scripts/seo_audit.py"
 MK = "opencart/extension/seolab/system/library/markup.php"
 BL = "bullion-shop/mu-plugins/bullion-lab/lib/"
@@ -101,6 +103,52 @@ MUTANTS = [
     (HC, "author enumeration is never reported", '"/author/" not in final and', "True and"),
     (HC, "a login that succeeds after the failures passes", "not any(wrong) and not ok_login and", "not any(wrong) and"),
     (SC, "a price valid for any length of time passes", "MAX_VALID_SECONDS = 3600", "MAX_VALID_SECONDS = 10 ** 10"),
+    (BU, "an unknown token name is accepted", 'if not isinstance(table, dict) or name not in table:', 'if False:'),
+    (BU, "an unlocked tokens file is accepted", 'if tokens.get("locked") is not True:', 'if False:'),
+    (BU, "true passes for the number one", ' or type(value) is not type(schema["const"])', ''),
+    (BU, "a trailing newline passes a pattern", 'schema["pattern"][:-1] + r"\\Z" if schema.get("pattern", "").endswith("$") else schema.get("pattern")', 'schema.get("pattern")'),
+    (BU, "unknown keys are accepted", 'elif schema.get("additionalProperties") is False:', 'elif False:'),
+    (BU, "a shape that matches two branches passes", 'if len(matches) > 1:', 'if False:'),
+    (BU, "required keys are not checked", 'if key not in value:', 'if False:'),
+    (BU, "a minimum is not enforced", 'if value < schema.get("minimum", value):', 'if False:'),
+    (BU, "a maximum length is not enforced", 'if len(value) > schema.get("maxLength", 10 ** 9):', 'if False:'),
+    (BU, "a protocol relative address passes", '|/(?!/)[^\\s]*|', '|/[^\\s]*|'),
+    (BU, "any tag passes", 'if tag not in ALLOWED_TAGS:', 'if False:'),
+    (BU, "any attribute passes", 'raise ManifestError(self.where + ": attribute " + name + " on <" + tag + "> is not allowed")', 'pass'),
+    (BU, "any style passes on a paragraph", 'elif tag == "p" and name == "style" and ALIGN_STYLE.match(value or ""):', 'elif tag == "p" and name == "style":'),
+    (BU, "a link address is not checked", 'keep.append(("href", safe_url(value or "", self.where)))', 'keep.append(("href", value or ""))'),
+    (BU, "a comment passes", 'raise ManifestError(self.where + ": comments are not allowed")', 'pass'),
+    (BU, "an unclosed tag passes", 'if cleaner.stack:', 'if False:'),
+    (BU, "alignment is not applied to html copy", 'if tag == "p" and not any(n == "style" for n, _ in keep) and self.align:', 'if False:'),
+    (BU, "plain text is not escaped", 'html.escape(block["text"], quote=False))', 'block["text"])'),
+    (BU, "a heading may carry markup", 'if re.search(r"[<>]", block["text"]):', 'if False:'),
+    (BU, "a list item may carry markup", 'if re.search(r"[<>]", text):', 'if False:'),
+    (BU, "column widths may pass 100", 'if total > 100:', 'if False:'),
+    (BU, "text and html may both be given", 'if ("text" in block) == ("html" in block):', 'if False:'),
+    (BU, "an id collision is ignored", 'if digest in self.ids:', 'if False:'),
+    (BU, "a linked padding is not marked linked", '"isLinked": top == right == bottom == left}', '"isLinked": False}'),
+    (BU, "inner containers are not marked inner", 'node["isInner"] = path.count("/") > 0', 'node["isInner"] = False'),
+    (BU, "the boxed width is not the token", '"size": self.tokens["content_width"]}', '"size": 1000}'),
+    (BU, "the default heading level is written", 'if block.get("level", "h2") != "h2":', 'if True:'),
+    (BU, "the hash covers nothing", 'hashlib.sha256(tree_json(tree).encode("utf-8")).hexdigest()', 'hashlib.sha256(b"").hexdigest()'),
+    (EC, "an object sent as text passes", "if (have === null || typeof have !== 'object') {", "if (false) {"),
+    (EC, "a list that changed length passes", "if (!Array.isArray(have) || have.length !== want.length) { out.push(path + ': list length '", "if (false) { out.push(path + ': list length '"),
+    (EC, "a dropped element passes", "if (!Array.isArray(have) || have.length !== want.length) { out.push(path + ': ' + want.length", "if (false) { out.push(path + ': ' + want.length"),
+    (EC, "a changed id passes", "['id', 'elType', 'widgetType'].forEach", "['elType', 'widgetType'].forEach"),
+    (EC, "a changed widget type passes", "['id', 'elType', 'widgetType'].forEach", "['id', 'elType'].forEach"),
+    (EC, "settings are not compared", "contains(w.settings, h.settings || {}, here + '.settings', out);", ""),
+    (EC, "children are not compared", "compareTree(w.elements, h.elements || [], here, out);", ""),
+    (EC, "values are compared by type as well", "if (String(want) !== String(have)) out.push(", "if (want !== have) out.push("),
+    (EC, "nested elements are not counted", "a + 1 + countElements(n.elements || [])", "a + 1"),
+    (RT, "an id with a trailing newline passes", "'/^[0-9a-f]{7}$/D'", "'/^[0-9a-f]{7}$/'"),
+    (RT, "any depth passes", "if ($depth > LAB_ELEMENTOR_MAX_DEPTH) {", "if (false) {"),
+    (RT, "an empty leaf list is refused at the depth limit", "if (is_array($nodes) && !$nodes) {", "if (false) {"),
+    (RT, "an object passes as a list", "if (!is_array($nodes) || !array_is_list($nodes)) {", "if (!is_array($nodes)) {"),
+    (RT, "any elType passes", "if (!in_array($node['elType'], array('container', 'widget'), true)) {", "if (false) {"),
+    (RT, "a widget needs no type", "if ($node['elType'] === 'widget' && empty($node['widgetType'])) {", "if (false) {"),
+    (RT, "settings may be text", "if (!is_array($node['settings'])) {", "if (false) {"),
+    (RT, "settings may be missing", "!isset($node['id'], $node['elType'], $node['settings'], $node['elements'])", "!isset($node['id'], $node['elType'], $node['elements'])"),
+    (RT, "children are not checked", "$err = lab_elementor_check_tree($node['elements'], $depth + 1);", "$err = null;"),
 ]
 
 
@@ -116,6 +164,10 @@ def run_tests(folder):
         r = subprocess.run([sys.executable, "-I", os.path.join(folder, t)], cwd=folder, capture_output=True, text=True, encoding="utf-8", timeout=120)
         if r.returncode != 0:
             return False
+    for t in NODE_TESTS:
+        r = subprocess.run(["node", os.path.join(folder, t)], cwd=folder, capture_output=True, text=True, encoding="utf-8", timeout=60)
+        if r.returncode != 0:
+            return False
     r = subprocess.run(php_command(folder), cwd=folder, capture_output=True, text=True, encoding="utf-8", timeout=180)
     return r.returncode == 0
 
@@ -124,7 +176,7 @@ def main():
     base = tempfile.mkdtemp(prefix="mutcheck_")
     try:
         copy = os.path.join(base, "clean")
-        shutil.copytree(ROOT, copy, ignore=shutil.ignore_patterns("__pycache__", ".git", "docs", "wp", "demo", "build"))
+        shutil.copytree(ROOT, copy, ignore=shutil.ignore_patterns("__pycache__", ".git", "docs", "demo", "build"))
         if not run_tests(copy):
             print("FAIL  the unbroken copy does not pass its own tests")
             return 1

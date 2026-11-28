@@ -1,0 +1,27 @@
+PASS  a good manifest is saved and the editor reads all 28 elements back
+PASS  the verified page is still a draft
+PASS  a verified draft is promoted
+PASS  the published page carries the generated heading
+PASS  an unknown widget type fails the editor check
+PASS  an unknown widget type: the draft is deleted, nothing is left or promoted
+PASS  a duplicate element id fails the editor check
+PASS  a duplicate element id: the draft is deleted, nothing is left or promoted
+PASS  a raw colour in a manifest is refused before any request
+PASS  the route refuses a legacy section element with 400
+PASS  the route refuses data that is not JSON with 400
+PASS  the route refuses data that is not a list with 400
+PASS  the route refuses data over a megabyte with 400
+PASS  the route refuses an empty title with 400
+PASS  the route refuses an empty slug with 400
+PASS  the route refuses the slug of a page it did not generate with 409
+PASS  the route refuses deleting a page it did not generate with 404
+PASS  the route refuses promoting a page it did not generate with 404
+PASS  the route refuses a request with no credentials with 401
+PASS  a draft is saved for the hash checks
+PASS  a wrong hash is refused and nothing is published
+PASS  a missing hash is refused
+PASS  the right hash promotes it
+PASS  a published page is not deleted by the draft route
+PASS  the check page is cleaned up
+
+25 of 25 checks passed
