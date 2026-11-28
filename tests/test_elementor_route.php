@@ -34,10 +34,10 @@ check('empty settings (an empty JSON object decodes to an empty array) are accep
 foreach (array('id', 'elType', 'settings', 'elements') as $key) {
     $w = widget();
     unset($w[$key]);
-    check("missing $key is refused", lab_elementor_check_tree(array($w)) !== null, true);
+    check("missing $key is refused for what it is", lab_elementor_check_tree(array($w)), 'an element lacks id, elType, settings or elements');
     $w = widget();
     $w[$key] = null;
-    check("null $key is refused", lab_elementor_check_tree(array($w)) !== null, true);
+    check("null $key is refused for what it is", lab_elementor_check_tree(array($w)), 'an element lacks id, elType, settings or elements');
 }
 
 foreach (array('ABCDEF0', 'abcdef', 'abcdef01', 'abcdefg', '', 'abc def', "abcdef0\n", 12345678, null, array('abcdef0')) as $bad) {

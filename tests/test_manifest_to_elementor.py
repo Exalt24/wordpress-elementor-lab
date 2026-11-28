@@ -377,6 +377,10 @@ class SchemaChecker(unittest.TestCase):
             with self.subTest(schema=schema, value=value):
                 self.assertEqual(not self.check(value, schema), ok)
 
+    def test_a_shape_matching_two_branches_says_so(self):
+        schema = {"oneOf": [{"type": "string"}, {"type": "string", "minLength": 1}]}
+        self.assertEqual(self.check("a", schema), ["$: matches more than one allowed shape"])
+
     def test_ref_is_followed(self):
         schema = {"$defs": {"s": {"type": "string"}}, "type": "object", "properties": {"a": {"$ref": "#/$defs/s"}}}
         self.assertEqual(self.check({"a": "x"}, schema), [])

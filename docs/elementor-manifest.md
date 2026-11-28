@@ -59,7 +59,7 @@ The editor drops an element with a widget type it does not have and the second o
 
 | Check | Count |
 |---|---|
-| `tests/test_manifest_to_elementor.py` (builder, schema subset, copy rules, command line) | 35 tests |
+| `tests/test_manifest_to_elementor.py` (builder, schema subset, copy rules, command line) | 36 tests |
 | `tests/test_editor_compare.cjs` (what the editor check reports) | 22 checks |
 | `tests/test_elementor_route.php` (the route's tree check, in PHP) | 46 checks |
 | `tests/live_elementor_pipeline.py` (needs the running lab, not in CI) | 25 checks |
